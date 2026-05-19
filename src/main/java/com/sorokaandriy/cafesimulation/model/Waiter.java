@@ -2,7 +2,7 @@ package com.sorokaandriy.cafesimulation.model;
 
 import com.sorokaandriy.cafesimulation.model.enums.OrderStatus;
 
-public class Waiter extends Staff{
+public class Waiter extends Staff implements CustomerHandler{
 
 
     public Waiter(Long id, String name, boolean isAvailable) {
@@ -14,6 +14,7 @@ public class Waiter extends Staff{
         System.out.println("Офіціант " + getName() + " обслуговує столики.");
     }
 
+    @Override
     public void takeOrder(Customer customer) {
         if (this.isAvailable() && customer.getOrder() != null) {
             this.setAvailable(false);
@@ -23,6 +24,7 @@ public class Waiter extends Staff{
         }
     }
 
+    @Override
     public void deliverOrder(Order order) {
         this.setAvailable(false);
         order.setOrderStatus(OrderStatus.DELIVERED);
@@ -30,6 +32,7 @@ public class Waiter extends Staff{
         this.setAvailable(true);
     }
 
+    @Override
     public void cleanTable() {
         this.setAvailable(false);
         System.out.println("Офіціант " + getName() + " прибирає столик.");
