@@ -30,16 +30,8 @@ public class Customer extends Person{
 
     @Override
     public String toString() {
-        return super.toString() + " [arrivalTime=" + arrivalTime + ", order=" + order + "]";
+        String orderInfo = (order != null) ? String.valueOf(order.getOrderId()) : "відсутнє";
+        return super.toString() + " [arrivalTime=" + getArrivalTime() + ", orderId=" + orderInfo + "]";
     }
 
-    @Override
-    public boolean equals(Object o) {
-        return super.equals(o);
-    }
-
-    @Override
-    public int hashCode() {
-        return super.hashCode();
-    }
 }

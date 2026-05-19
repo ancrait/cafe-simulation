@@ -29,7 +29,7 @@ public abstract class Person {
 
     @Override
     public String toString() {
-        return this.getClass().getSimpleName() + "{id=" + id + ", name='" + name + "'}";
+        return getClass().getSimpleName() + "{id=" + getId() + ", name='" + getName() + "'}";
     }
 
     @Override
@@ -42,6 +42,6 @@ public abstract class Person {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id);
+        return Objects.hash(getId());
     }
 }

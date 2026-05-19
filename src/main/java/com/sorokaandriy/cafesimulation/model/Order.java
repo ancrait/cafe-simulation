@@ -54,23 +54,24 @@ public class Order {
 
     @Override
     public String toString() {
+        String customerName = (customer != null) ? customer.getName() : "Невідомий";
         return "Order{" +
                 "orderId=" + orderId +
-                ", customer=" + customer +
+                ", customer='" + customerName + '\'' +
                 ", orderStatus=" + orderStatus +
                 ", preparationTime=" + preparationTime +
                 '}';
     }
-
     @Override
     public boolean equals(Object o) {
+        if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Order order = (Order) o;
-        return orderId == order.orderId && preparationTime == order.preparationTime && Objects.equals(customer, order.customer) && orderStatus == order.orderStatus;
+        return orderId == order.orderId;
     }
 
     @Override
-    public int hashCode() {
-        return Objects.hash(orderId, customer, orderStatus, preparationTime);
+        public int hashCode() {
+        return Objects.hash(getOrderId());
     }
 }

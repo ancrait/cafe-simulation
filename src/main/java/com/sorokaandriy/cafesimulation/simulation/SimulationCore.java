@@ -64,7 +64,7 @@ public class SimulationCore {
         if (currentTime >= nextCustomerArrivalTime) {
             Customer newCustomer = new Customer(currentTime, "Клієнт-" + currentTime, currentTime, null);
             customerQueue.add(newCustomer);
-            System.out.println("Час " + currentTime + ": Прийшов " + newCustomer.getName());
+
 
             statisticsCollector.recordArrival();
 
@@ -98,7 +98,7 @@ public class SimulationCore {
                 processor.finishCooking(finishedOrder);
                 readyOrders.add(finishedOrder);
             }
-            System.out.println("Час " + currentTime + ": " + worker.getName() + " звільнився.");
+
             worker.setAvailable(true);
         }
     }
