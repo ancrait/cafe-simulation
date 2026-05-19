@@ -9,23 +9,14 @@ public class Chef extends Staff implements OrderProcessor{
         super(id, name, isAvailable);
     }
 
-    @Override
-    public void performWork() {
-        System.out.println("Кухар " + getName() + " готує страву.");
-    }
-
 
     @Override
     public void startCooking(Order order) {
-        this.setAvailable(false);
         order.setOrderStatus(OrderStatus.PREPARING);
-        System.out.println("Кухар " + getName() + " почав готувати замовлення #" + order.getOrderId());
     }
 
     @Override
     public void finishCooking(Order order) {
         order.setOrderStatus(OrderStatus.READY);
-        this.setAvailable(true);
-        System.out.println("Кухар " + getName() + " приготував замовлення #" + order.getOrderId());
     }
 }

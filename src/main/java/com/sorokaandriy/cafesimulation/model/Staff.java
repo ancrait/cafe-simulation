@@ -27,22 +27,12 @@ public abstract class Staff extends Person{
         isAvailable = available;
     }
 
-    public abstract void performWork();
 
     @Override
     public String toString() {
         return super.toString() + " [isAvailable= " + isAvailable + "]";
         }
 
-    @Override
-    public boolean equals(Object o) {
-        return super.equals(o);
-    }
-
-    @Override
-    public int hashCode() {
-        return super.hashCode();
-    }
 
 
 }
