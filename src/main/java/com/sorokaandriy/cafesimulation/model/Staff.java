@@ -2,12 +2,21 @@ package com.sorokaandriy.cafesimulation.model;
 
 import java.util.Objects;
 
-public class Staff extends Person{
+public abstract class Staff extends Person{
     private boolean isAvailable;
+    private long busyUntil = 0;
 
     public Staff(Long id, String name, boolean isAvailable ) {
         super(id, name);
         this.isAvailable = isAvailable;
+    }
+
+    public long getBusyUntil() {
+        return busyUntil;
+    }
+
+    public void setBusyUntil(long busyUntil) {
+        this.busyUntil = busyUntil;
     }
 
     public boolean isAvailable() {
@@ -17,6 +26,8 @@ public class Staff extends Person{
     public void setAvailable(boolean available) {
         isAvailable = available;
     }
+
+    public abstract void performWork();
 
     @Override
     public String toString() {
