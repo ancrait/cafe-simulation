@@ -14,6 +14,9 @@ public class DeliverOrderStrategy implements TaskAssignmentStrategy{
 
             handler.deliverOrder(order);
 
+            long waitTime = core.getCurrentTime() - order.getCustomer().getArrivalTime();
+            core.getStatisticsCollector().recordServed(waitTime);
+
             long time = Math.round(Math.max(1, core.getServiceDistribution().sample()));
             core.setWorkerBusy(worker, time);
 

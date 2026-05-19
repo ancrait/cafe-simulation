@@ -3,10 +3,12 @@ package com.sorokaandriy.cafesimulation.simulation;
 import com.sorokaandriy.cafesimulation.model.*;
 import java.util.*;
 import com.sorokaandriy.cafesimulation.model.enums.OrderStatus;
+import com.sorokaandriy.cafesimulation.simulation.statistics.StatisticsCollector;
 import com.sorokaandriy.cafesimulation.simulation.tasks.CookOrderStrategy;
 import com.sorokaandriy.cafesimulation.simulation.tasks.DeliverOrderStrategy;
 import com.sorokaandriy.cafesimulation.simulation.tasks.TakeOrderStrategy;
 import com.sorokaandriy.cafesimulation.simulation.tasks.TaskAssignmentStrategy;
+import org.apache.commons.math3.analysis.solvers.NewtonRaphsonSolver;
 import org.apache.commons.math3.distribution.ExponentialDistribution;
 import org.apache.commons.math3.distribution.NormalDistribution;
 
@@ -22,6 +24,7 @@ public class SimulationCore {
     private Map<Staff, Order> activeKitchenOrders;
     private NormalDistribution cookingDistribution;
     private List<TaskAssignmentStrategy> taskStrategies;
+    private StatisticsCollector statisticsCollector;
 
     public SimulationCore() {
         this.customerQueue = new LinkedList<>();
@@ -43,6 +46,8 @@ public class SimulationCore {
                 new TakeOrderStrategy(),
                 new CookOrderStrategy()
         );
+
+        this.statisticsCollector = new StatisticsCollector();
     }
 
     public long getCurrentTime() { return currentTime; }
@@ -52,6 +57,7 @@ public class SimulationCore {
     public Map<Staff, Order> getActiveKitchenOrders() { return activeKitchenOrders; }
     public NormalDistribution getServiceDistribution() { return serviceDistribution; }
     public NormalDistribution getCookingDistribution() { return cookingDistribution; }
+    public StatisticsCollector getStatisticsCollector() {return statisticsCollector;}
 
     public void tick() {
         currentTime++;
@@ -59,6 +65,8 @@ public class SimulationCore {
             Customer newCustomer = new Customer(currentTime, "Клієнт-" + currentTime, currentTime, null);
             customerQueue.add(newCustomer);
             System.out.println("Час " + currentTime + ": Прийшов " + newCustomer.getName());
+
+            statisticsCollector.recordArrival();
 
             long intervalToNextCustomer = Math.round(arrivalDistribution.sample());
             nextCustomerArrivalTime = currentTime + intervalToNextCustomer;
@@ -91,6 +99,7 @@ public class SimulationCore {
                 readyOrders.add(finishedOrder);
             }
             System.out.println("Час " + currentTime + ": " + worker.getName() + " звільнився.");
+            worker.setAvailable(true);
         }
     }
 
