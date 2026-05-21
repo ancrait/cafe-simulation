@@ -3,11 +3,9 @@ package com.sorokaandriy.cafesimulation.simulation;
 import com.sorokaandriy.cafesimulation.model.*;
 import java.util.*;
 import com.sorokaandriy.cafesimulation.model.enums.OrderStatus;
+import com.sorokaandriy.cafesimulation.model.enums.TableStatus;
 import com.sorokaandriy.cafesimulation.simulation.statistics.StatisticsCollector;
-import com.sorokaandriy.cafesimulation.simulation.tasks.CookOrderStrategy;
-import com.sorokaandriy.cafesimulation.simulation.tasks.DeliverOrderStrategy;
-import com.sorokaandriy.cafesimulation.simulation.tasks.TakeOrderStrategy;
-import com.sorokaandriy.cafesimulation.simulation.tasks.TaskAssignmentStrategy;
+import com.sorokaandriy.cafesimulation.simulation.tasks.*;
 import org.apache.commons.math3.analysis.solvers.NewtonRaphsonSolver;
 import org.apache.commons.math3.distribution.ExponentialDistribution;
 import org.apache.commons.math3.distribution.NormalDistribution;
@@ -25,6 +23,7 @@ public class SimulationCore {
     private NormalDistribution cookingDistribution;
     private List<TaskAssignmentStrategy> taskStrategies;
     private StatisticsCollector statisticsCollector;
+    List<Table> tables;
 
     public SimulationCore() {
         this.customerQueue = new LinkedList<>();
@@ -44,10 +43,13 @@ public class SimulationCore {
         this.taskStrategies = Arrays.asList(
                 new DeliverOrderStrategy(),
                 new TakeOrderStrategy(),
-                new CookOrderStrategy()
+                new CookOrderStrategy(),
+                new CleanTableStrategy()
         );
 
         this.statisticsCollector = new StatisticsCollector();
+        this.tables = new ArrayList<>();
+        initTables();
     }
 
     public long getCurrentTime() { return currentTime; }
@@ -58,6 +60,7 @@ public class SimulationCore {
     public NormalDistribution getServiceDistribution() { return serviceDistribution; }
     public NormalDistribution getCookingDistribution() { return cookingDistribution; }
     public StatisticsCollector getStatisticsCollector() {return statisticsCollector;}
+    public List<Table> getTables(){return tables;}
 
     public void tick() {
         currentTime++;
@@ -112,6 +115,39 @@ public class SimulationCore {
     public void addStaff(Staff staff){
         staffList.add(staff);
     }
+
+    public void initTables() {
+        for (int i = 1; i <= 5; i++) {
+            tables.add(new Table(i));
+        }
+    }
+
+    public Table findFreeTable() {
+        for (Table table : tables) {
+            if (table.getTableStatus() == TableStatus.FREE) return table;
+        }
+        return null;
+    }
+
+    public Table findDirtyTable() {
+        for (Table table : tables) {
+            if (table.getTableStatus() == TableStatus.DIRTY) return table;
+        }
+        return null;
+    }
+
+    public Table findTableByCustomer(Customer customer) {
+        for (Table table : tables) {
+            if (table.getCurrentCustomer() != null && table.getCurrentCustomer().equals(customer)) {
+                return table;
+            }
+        }
+        return null;
+    }
+
+
+
+
 
 
 

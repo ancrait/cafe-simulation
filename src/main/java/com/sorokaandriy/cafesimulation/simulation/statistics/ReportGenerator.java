@@ -23,6 +23,9 @@ public class ReportGenerator {
             String avgTime = String.format("%.2f", stats.getAverageWaitTime());
             writer.write("3. Середній час очікування: " + avgTime + " тиків\n");
 
+            String avgCleanTime = String.format("%.2f", stats.getAverageCleaningTime());
+            writer.write("5. Середній час прибирання столу: " + avgCleanTime + " тиків\n");
+
             return filename;
 
 

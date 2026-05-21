@@ -21,10 +21,6 @@ public class Waiter extends Staff implements CustomerHandler{
         order.setOrderStatus(OrderStatus.DELIVERED);
     }
 
-    @Override
-    public void cleanTable() {
-
-    }
 
 
 }

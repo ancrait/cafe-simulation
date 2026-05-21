@@ -1,19 +1,22 @@
 package com.sorokaandriy.cafesimulation.simulation.tasks;
 
 
-import com.sorokaandriy.cafesimulation.model.Customer;
-import com.sorokaandriy.cafesimulation.model.CustomerHandler;
-import com.sorokaandriy.cafesimulation.model.Order;
-import com.sorokaandriy.cafesimulation.model.Staff;
+import com.sorokaandriy.cafesimulation.model.*;
 import com.sorokaandriy.cafesimulation.model.enums.OrderStatus;
+import com.sorokaandriy.cafesimulation.model.enums.TableStatus;
 import com.sorokaandriy.cafesimulation.simulation.SimulationCore;
 
 public class TakeOrderStrategy implements TaskAssignmentStrategy{
     @Override
     public boolean tryAssignTask(Staff worker, SimulationCore core) {
-        if (worker instanceof CustomerHandler && !core.getCustomerQueue().isEmpty()) {
+        Table table = core.findFreeTable();
+
+        if (worker instanceof CustomerHandler && !core.getCustomerQueue().isEmpty() && table!=null) {
             CustomerHandler handler = (CustomerHandler) worker;
             Customer customer = core.getCustomerQueue().poll();
+
+            table.setTableStatus(TableStatus.OCCUPIED);
+            table.setCurrentCustomer(customer);
 
             Order newOrder = new Order(customer.getId(), customer, OrderStatus.PENDING, 0);
             customer.setOrder(newOrder);
