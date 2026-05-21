@@ -3,6 +3,8 @@ package com.sorokaandriy.cafesimulation.simulation.tasks;
 import com.sorokaandriy.cafesimulation.model.Staff;
 import com.sorokaandriy.cafesimulation.model.CustomerHandler;
 import com.sorokaandriy.cafesimulation.model.Order;
+import com.sorokaandriy.cafesimulation.model.Table;
+import com.sorokaandriy.cafesimulation.model.enums.TableStatus;
 import com.sorokaandriy.cafesimulation.simulation.SimulationCore;
 
 public class DeliverOrderStrategy implements TaskAssignmentStrategy{
@@ -16,6 +18,12 @@ public class DeliverOrderStrategy implements TaskAssignmentStrategy{
 
             long waitTime = core.getCurrentTime() - order.getCustomer().getArrivalTime();
             core.getStatisticsCollector().recordServed(waitTime);
+
+            Table table = core.findTableByCustomer(order.getCustomer());
+            if (table != null){
+                table.setTableStatus(TableStatus.DIRTY);
+                table.setCurrentCustomer(null);
+            }
 
             long time = Math.round(Math.max(1, core.getServiceDistribution().sample()));
             core.setWorkerBusy(worker, time);

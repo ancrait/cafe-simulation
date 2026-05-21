@@ -6,6 +6,9 @@ public class StatisticsCollector {
     private int totalCustomersServed = 0;
     private long totalWaitTime = 0;
 
+    private long totalTablesCleaned = 0;
+    private long totalCleaningTime;
+
 
     public void recordArrival() {
         totalCustomersArrived++;
@@ -31,5 +34,14 @@ public class StatisticsCollector {
 
     public long getTotalWaitTime() {
         return totalWaitTime;
+    }
+
+    public long getTotalTablesCleaned() {
+        return totalTablesCleaned;
+    }
+
+    public double getAverageCleaningTime() {
+        if (totalTablesCleaned == 0) return 0.0;
+        return (double) totalCleaningTime / totalTablesCleaned;
     }
 }
