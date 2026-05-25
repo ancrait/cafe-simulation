@@ -19,10 +19,10 @@ public class DeliverOrderStrategy implements TaskAssignmentStrategy{
             long waitTime = core.getCurrentTime() - order.getCustomer().getArrivalTime();
             core.getStatisticsCollector().recordServed(waitTime);
 
-            Table table = core.findTableByCustomer(order.getCustomer());
+            Table table = core.getTableService().findTableByCustomer(order.getCustomer());
             if (table != null){
                 long eatingTime = Math.round(Math.max(1, core.getEatingDistribution().sample()));
-                table.setOccupiedUntil(core.getCurrentTime() + eatingTime);
+                table.startEating(core.getCurrentTime(), eatingTime);
             }
 
             long time = Math.round(Math.max(1, core.getServiceDistribution().sample()));
