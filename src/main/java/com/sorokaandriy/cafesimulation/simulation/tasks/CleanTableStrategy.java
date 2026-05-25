@@ -9,11 +9,11 @@ import com.sorokaandriy.cafesimulation.simulation.SimulationCore;
 public class CleanTableStrategy implements TaskAssignmentStrategy{
     @Override
     public boolean tryAssignTask(Staff worker, SimulationCore core) {
-        Table dirtyTable = core.findDirtyTable();
+        Table dirtyTable = core.getTableService().findDirtyTable();
 
         if (worker instanceof CustomerHandler && dirtyTable != null) {
 
-            dirtyTable.setTableStatus(TableStatus.FREE);
+            dirtyTable.clean();
 
             long time = Math.round(Math.max(1, core.getServiceDistribution().sample()));
             core.getStatisticsCollector().recordCleanedTable(time);

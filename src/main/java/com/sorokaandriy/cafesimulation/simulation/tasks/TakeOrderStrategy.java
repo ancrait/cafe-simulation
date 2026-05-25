@@ -9,14 +9,13 @@ import com.sorokaandriy.cafesimulation.simulation.SimulationCore;
 public class TakeOrderStrategy implements TaskAssignmentStrategy{
     @Override
     public boolean tryAssignTask(Staff worker, SimulationCore core) {
-        Table table = core.findFreeTable();
+        Table table = core.getTableService().findFreeTable();
 
         if (worker instanceof CustomerHandler && !core.getCustomerQueue().isEmpty() && table != null) {
             CustomerHandler handler = (CustomerHandler) worker;
             Customer customer = core.getCustomerQueue().poll();
 
-            table.setTableStatus(TableStatus.OCCUPIED);
-            table.setCurrentCustomer(customer);
+            table.seatCustomer(customer);
 
             Order newOrder = new Order(customer.getId(), customer, OrderStatus.PENDING, 0);
             customer.setOrder(newOrder);

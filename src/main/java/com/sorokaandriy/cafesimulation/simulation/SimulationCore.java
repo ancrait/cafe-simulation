@@ -23,8 +23,9 @@ public class SimulationCore {
     private NormalDistribution cookingDistribution;
     private List<TaskAssignmentStrategy> taskStrategies;
     private StatisticsCollector statisticsCollector;
-    List<Table> tables;
+    private List<Table> tables;
     private NormalDistribution eatingDistribution;
+    private final TableService tableService;
 
     public SimulationCore() {
         this.customerQueue = new LinkedList<>();
@@ -50,8 +51,8 @@ public class SimulationCore {
 
         this.statisticsCollector = new StatisticsCollector();
         this.tables = new ArrayList<>();
-        initTables();
         this.eatingDistribution = new NormalDistribution(25.0, 5.0);
+        this.tableService = new TableService(5);
     }
 
     public long getCurrentTime() { return currentTime; }
@@ -62,8 +63,8 @@ public class SimulationCore {
     public NormalDistribution getServiceDistribution() { return serviceDistribution; }
     public NormalDistribution getCookingDistribution() { return cookingDistribution; }
     public StatisticsCollector getStatisticsCollector() {return statisticsCollector;}
-    public List<Table> getTables(){return tables;}
     public NormalDistribution getEatingDistribution() {return eatingDistribution;}
+    public TableService getTableService() {return tableService;}
 
     public void tick() {
         currentTime++;
@@ -118,50 +119,21 @@ public class SimulationCore {
     }
 
 
-    public void initTables() {
-        for (int i = 1; i <= 5; i++) {
-            tables.add(new Table(i));
-        }
-    }
 
-    public Table findFreeTable() {
-        for (Table table : tables) {
-            if (table.getTableStatus() == TableStatus.FREE) return table;
-        }
-        return null;
-    }
-
-    public Table findDirtyTable() {
-        for (Table table : tables) {
-            if (table.getTableStatus() == TableStatus.DIRTY) return table;
-        }
-        return null;
-    }
-
-    public Table findTableByCustomer(Customer customer) {
-        for (Table table : tables) {
-            if (table.getCurrentCustomer() != null && table.getCurrentCustomer().equals(customer)) {
-                return table;
-            }
-        }
-        return null;
-    }
 
 
     private void handleCustomersEating() {
         for (Table table : tables) {
             if (table.getTableStatus() == TableStatus.OCCUPIED
                     && table.getCurrentCustomer() != null
-                    && table.getCurrentCustomer().getOrder().getOrderStatus() == OrderStatus.DELIVERED) {
+                    && table.getCurrentCustomer().getOrder().getOrderStatus() == OrderStatus.DELIVERED
+                    && currentTime >= table.getOccupiedUntil()) {
 
-                if (currentTime >= table.getOccupiedUntil()) {
-                    table.getCurrentCustomer().getOrder().setOrderStatus(OrderStatus.COMPLETED);
-                    table.setTableStatus(TableStatus.DIRTY);
-                    table.setCurrentCustomer(null);
+                table.markAsFinished();
                 }
             }
         }
     }
 
 
-}
+
