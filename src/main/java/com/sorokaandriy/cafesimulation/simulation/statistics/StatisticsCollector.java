@@ -2,12 +2,12 @@ package com.sorokaandriy.cafesimulation.simulation.statistics;
 
 public class StatisticsCollector {
 
-    private int totalCustomersArrived = 0;
-    private int totalCustomersServed = 0;
+    private long totalCustomersArrived = 0;
+    private long totalCustomersServed = 0;
     private long totalWaitTime = 0;
 
     private long totalTablesCleaned = 0;
-    private long totalCleaningTime;
+    private long totalCleaningTime = 0;
 
 
     public void recordArrival() {
@@ -19,16 +19,21 @@ public class StatisticsCollector {
         totalWaitTime += waitTime;
     }
 
+    public void recordCleanedTable(long timeSpent) {
+        totalTablesCleaned++;
+        totalCleaningTime += timeSpent;
+    }
+
     public double getAverageWaitTime() {
         if (totalCustomersServed == 0) return 0.0;
         return (double) totalWaitTime / totalCustomersServed;
     }
 
-    public int getTotalCustomersArrived() {
+    public long getTotalCustomersArrived() {
         return totalCustomersArrived;
     }
 
-    public int getTotalCustomersServed() {
+    public long getTotalCustomersServed() {
         return totalCustomersServed;
     }
 

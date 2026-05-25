@@ -24,6 +24,7 @@ public class SimulationCore {
     private List<TaskAssignmentStrategy> taskStrategies;
     private StatisticsCollector statisticsCollector;
     List<Table> tables;
+    private NormalDistribution eatingDistribution;
 
     public SimulationCore() {
         this.customerQueue = new LinkedList<>();
@@ -50,6 +51,7 @@ public class SimulationCore {
         this.statisticsCollector = new StatisticsCollector();
         this.tables = new ArrayList<>();
         initTables();
+        this.eatingDistribution = new NormalDistribution(25.0, 5.0);
     }
 
     public long getCurrentTime() { return currentTime; }
@@ -61,6 +63,7 @@ public class SimulationCore {
     public NormalDistribution getCookingDistribution() { return cookingDistribution; }
     public StatisticsCollector getStatisticsCollector() {return statisticsCollector;}
     public List<Table> getTables(){return tables;}
+    public NormalDistribution getEatingDistribution() {return eatingDistribution;}
 
     public void tick() {
         currentTime++;
@@ -75,7 +78,9 @@ public class SimulationCore {
             nextCustomerArrivalTime = currentTime + intervalToNextCustomer;
         }
 
+
         assignTasks();
+        handleCustomersEating();
     }
 
     private void assignTasks() {
@@ -112,9 +117,6 @@ public class SimulationCore {
         worker.setBusyUntil(currentTime + duration);
     }
 
-    public void addStaff(Staff staff){
-        staffList.add(staff);
-    }
 
     public void initTables() {
         for (int i = 1; i <= 5; i++) {
@@ -146,9 +148,20 @@ public class SimulationCore {
     }
 
 
+    private void handleCustomersEating() {
+        for (Table table : tables) {
+            if (table.getTableStatus() == TableStatus.OCCUPIED
+                    && table.getCurrentCustomer() != null
+                    && table.getCurrentCustomer().getOrder().getOrderStatus() == OrderStatus.DELIVERED) {
 
-
-
+                if (currentTime >= table.getOccupiedUntil()) {
+                    table.getCurrentCustomer().getOrder().setOrderStatus(OrderStatus.COMPLETED);
+                    table.setTableStatus(TableStatus.DIRTY);
+                    table.setCurrentCustomer(null);
+                }
+            }
+        }
+    }
 
 
 }

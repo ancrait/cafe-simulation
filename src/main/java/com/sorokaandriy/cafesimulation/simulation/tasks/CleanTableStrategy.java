@@ -16,6 +16,7 @@ public class CleanTableStrategy implements TaskAssignmentStrategy{
             dirtyTable.setTableStatus(TableStatus.FREE);
 
             long time = Math.round(Math.max(1, core.getServiceDistribution().sample()));
+            core.getStatisticsCollector().recordCleanedTable(time);
             core.setWorkerBusy(worker, time);
 
             return true;

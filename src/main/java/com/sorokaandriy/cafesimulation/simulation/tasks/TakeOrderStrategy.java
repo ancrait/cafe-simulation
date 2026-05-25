@@ -11,7 +11,7 @@ public class TakeOrderStrategy implements TaskAssignmentStrategy{
     public boolean tryAssignTask(Staff worker, SimulationCore core) {
         Table table = core.findFreeTable();
 
-        if (worker instanceof CustomerHandler && !core.getCustomerQueue().isEmpty() && table!=null) {
+        if (worker instanceof CustomerHandler && !core.getCustomerQueue().isEmpty() && table != null) {
             CustomerHandler handler = (CustomerHandler) worker;
             Customer customer = core.getCustomerQueue().poll();
 

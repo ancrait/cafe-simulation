@@ -9,6 +9,7 @@ public class Table {
     private long id;
     private TableStatus tableStatus;
     private Customer currentCustomer;
+    private long occupiedUntil = 0;
 
     public Table(long id) {
         this.id = id;
@@ -39,6 +40,9 @@ public class Table {
         this.currentCustomer = currentCustomer;
     }
 
+    public long getOccupiedUntil() {return occupiedUntil;}
+
+    public void setOccupiedUntil(long occupiedUntil) {this.occupiedUntil = occupiedUntil;}
 
     @Override
     public String toString() {
