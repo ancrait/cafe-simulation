@@ -1,5 +1,6 @@
 package com.sorokaandriy.cafesimulation.simulation.tasks;
 
+import com.sorokaandriy.cafesimulation.exception.CafeSimulationException;
 import com.sorokaandriy.cafesimulation.model.Order;
 import com.sorokaandriy.cafesimulation.model.OrderProcessor;
 import com.sorokaandriy.cafesimulation.model.Staff;
@@ -15,7 +16,15 @@ public class CookOrderStrategy implements TaskAssignmentStrategy{
             processor.startCooking(order);
             core.getActiveKitchenOrders().put(worker, order);
 
-            long time = Math.round(Math.max(1, core.getCookingDistribution().sample()));
+
+            if (order.getMenuItem() == null) {
+                throw new CafeSimulationException(
+                        "Замовлення #" + order.getOrderId() + " не має страви"
+                );
+            }
+            long time = core.getMenuService().samplePreparationTime(order.getMenuItem());
+
+            order.setPreparationTime(time);
             core.setWorkerBusy(worker, time);
 
             return true;

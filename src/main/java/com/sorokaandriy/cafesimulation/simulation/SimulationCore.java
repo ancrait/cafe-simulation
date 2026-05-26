@@ -4,9 +4,10 @@ import com.sorokaandriy.cafesimulation.model.*;
 import java.util.*;
 import com.sorokaandriy.cafesimulation.model.enums.OrderStatus;
 import com.sorokaandriy.cafesimulation.model.enums.TableStatus;
+import com.sorokaandriy.cafesimulation.simulation.service.MenuService;
+import com.sorokaandriy.cafesimulation.simulation.service.TableService;
 import com.sorokaandriy.cafesimulation.simulation.statistics.StatisticsCollector;
 import com.sorokaandriy.cafesimulation.simulation.tasks.*;
-import org.apache.commons.math3.analysis.solvers.NewtonRaphsonSolver;
 import org.apache.commons.math3.distribution.ExponentialDistribution;
 import org.apache.commons.math3.distribution.NormalDistribution;
 
@@ -20,12 +21,13 @@ public class SimulationCore {
     private long nextCustomerArrivalTime;
     private NormalDistribution serviceDistribution;
     private Map<Staff, Order> activeKitchenOrders;
-    private NormalDistribution cookingDistribution;
     private List<TaskAssignmentStrategy> taskStrategies;
     private StatisticsCollector statisticsCollector;
     private List<Table> tables;
     private NormalDistribution eatingDistribution;
     private final TableService tableService;
+
+    private final MenuService menuService;
 
     public SimulationCore() {
         this.customerQueue = new LinkedList<>();
@@ -38,7 +40,7 @@ public class SimulationCore {
         this.serviceDistribution = new NormalDistribution(5.0, 1.5);
 
         this.activeKitchenOrders = new HashMap<>();
-        this.cookingDistribution = new NormalDistribution(15.0, 3.0);
+
         this.staffList = new ArrayList<>();
 
 
@@ -53,6 +55,7 @@ public class SimulationCore {
         this.tables = new ArrayList<>();
         this.eatingDistribution = new NormalDistribution(25.0, 5.0);
         this.tableService = new TableService(5);
+        this.menuService = new MenuService();
     }
 
     public long getCurrentTime() { return currentTime; }
@@ -61,10 +64,10 @@ public class SimulationCore {
     public Queue<Order> getReadyOrders() { return readyOrders; }
     public Map<Staff, Order> getActiveKitchenOrders() { return activeKitchenOrders; }
     public NormalDistribution getServiceDistribution() { return serviceDistribution; }
-    public NormalDistribution getCookingDistribution() { return cookingDistribution; }
     public StatisticsCollector getStatisticsCollector() {return statisticsCollector;}
     public NormalDistribution getEatingDistribution() {return eatingDistribution;}
     public TableService getTableService() {return tableService;}
+    public MenuService getMenuService() { return menuService; }
 
     public void tick() {
         currentTime++;
