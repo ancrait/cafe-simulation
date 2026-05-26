@@ -1,4 +1,4 @@
-package com.sorokaandriy.cafesimulation.simulation;
+package com.sorokaandriy.cafesimulation.simulation.service;
 
 import com.sorokaandriy.cafesimulation.model.Customer;
 import com.sorokaandriy.cafesimulation.model.Table;
