@@ -27,6 +27,8 @@ public class CookOrderStrategy implements TaskAssignmentStrategy{
             order.setPreparationTime(time);
             core.setWorkerBusy(worker, time);
 
+            core.getStatisticsCollector().recordMenuItemCooked(order.getMenuItem(), time);
+
             return true;
         }
         return false;

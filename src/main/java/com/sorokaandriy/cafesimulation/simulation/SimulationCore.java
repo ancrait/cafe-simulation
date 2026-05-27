@@ -26,8 +26,8 @@ public class SimulationCore {
     private List<Table> tables;
     private NormalDistribution eatingDistribution;
     private final TableService tableService;
-
     private final MenuService menuService;
+    private final ExponentialDistribution patienceDistribution;
 
     public SimulationCore() {
         this.customerQueue = new LinkedList<>();
@@ -56,6 +56,8 @@ public class SimulationCore {
         this.eatingDistribution = new NormalDistribution(25.0, 5.0);
         this.tableService = new TableService(5);
         this.menuService = new MenuService();
+
+        this.patienceDistribution = new ExponentialDistribution(20.0);
     }
 
     public long getCurrentTime() { return currentTime; }
@@ -72,7 +74,11 @@ public class SimulationCore {
     public void tick() {
         currentTime++;
         if (currentTime >= nextCustomerArrivalTime) {
-            Customer newCustomer = new Customer(currentTime, "Клієнт-" + currentTime, currentTime, null);
+
+            long patience = Math.max(5, Math.round(patienceDistribution.sample()));
+
+            Customer newCustomer = new Customer(currentTime, "Клієнт-" + currentTime,
+                    currentTime, null, patience);
             customerQueue.add(newCustomer);
 
 
@@ -83,9 +89,11 @@ public class SimulationCore {
         }
 
 
+        handleImpatientCustomers();
         assignTasks();
         handleCustomersEating();
     }
+
 
     private void assignTasks() {
         for (Staff worker : staffList) {
@@ -99,6 +107,16 @@ public class SimulationCore {
                 }
             }
         }
+    }
+
+    private void handleImpatientCustomers() {
+        customerQueue.removeIf(customer -> {
+            if (customer.hasRunOutOfPatience(currentTime)) {
+                statisticsCollector.recordCustomerLeft();
+                return true;
+            }
+            return false;
+        });
     }
 
 
@@ -120,9 +138,6 @@ public class SimulationCore {
         worker.setAvailable(false);
         worker.setBusyUntil(currentTime + duration);
     }
-
-
-
 
 
     private void handleCustomersEating() {
