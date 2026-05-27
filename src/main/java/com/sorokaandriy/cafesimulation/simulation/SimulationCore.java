@@ -92,6 +92,7 @@ public class SimulationCore {
         handleImpatientCustomers();
         assignTasks();
         handleCustomersEating();
+        handleChefRecovery();
     }
 
 
@@ -130,6 +131,14 @@ public class SimulationCore {
             }
 
             worker.setAvailable(true);
+        }
+    }
+
+    private void handleChefRecovery() {
+        for (Staff worker : staffList) {
+            if (worker instanceof Chef && worker.isAvailable()) {
+                ((Chef) worker).recover();
+            }
         }
     }
 
