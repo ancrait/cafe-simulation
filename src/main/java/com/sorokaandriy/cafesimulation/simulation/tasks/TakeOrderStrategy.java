@@ -18,9 +18,7 @@ public class TakeOrderStrategy implements TaskAssignmentStrategy{
 
             table.seatCustomer(customer);
 
-            MenuItem selectedItem = customer.getSelectedMenuItem() != null
-                    ? customer.getSelectedMenuItem()
-                    : core.getMenuService().selectByPopularity();
+            MenuItem selectedItem = core.getMenuService().selectByPopularity();
 
             Order newOrder = new Order(customer.getId(), customer, OrderStatus.PENDING, selectedItem);
             customer.setOrder(newOrder);
