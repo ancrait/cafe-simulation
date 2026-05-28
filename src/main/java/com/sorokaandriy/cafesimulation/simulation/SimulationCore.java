@@ -71,6 +71,11 @@ public class SimulationCore {
     public TableService getTableService() {return tableService;}
     public MenuService getMenuService() { return menuService; }
 
+
+    public void addStaff(Staff staff) {
+        staffList.add(staff);
+    }
+
     public void tick() {
         currentTime++;
         if (currentTime >= nextCustomerArrivalTime) {
