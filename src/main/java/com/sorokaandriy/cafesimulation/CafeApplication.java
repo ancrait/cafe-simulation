@@ -7,12 +7,16 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 
-public class HelloApplication extends Application {
+public class CafeApplication extends Application {
     @Override
     public void start(Stage stage) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("hello-view.fxml"));
-        Scene scene = new Scene(fxmlLoader.load(), 320, 240);
-        stage.setTitle("Hello!");
+        FXMLLoader fxmlLoader = new FXMLLoader(
+                CafeApplication.class.getResource("settings-view.fxml")
+        );
+        Scene scene = new Scene(fxmlLoader.load());
+        stage.setTitle("Cafe Simulation — Налаштування");
+        stage.setWidth(960);
+        stage.setHeight(700);
         stage.setScene(scene);
         stage.show();
     }
