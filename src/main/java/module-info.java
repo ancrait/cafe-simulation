@@ -7,5 +7,6 @@ module com.sorokaandriy.cafesimulation {
     requires commons.math3;
 
     opens com.sorokaandriy.cafesimulation to javafx.fxml;
+    opens com.sorokaandriy.cafesimulation.controller to javafx.fxml;
     exports com.sorokaandriy.cafesimulation;
 }

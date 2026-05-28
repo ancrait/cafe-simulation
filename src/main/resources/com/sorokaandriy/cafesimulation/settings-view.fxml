@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<VBox xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.sorokaandriy.cafesimulation.controller.SettingsController"
+      styleClass="root-container"
+      stylesheets="@css/settings.css">
+
+
+    <HBox styleClass="header" alignment="CENTER">
+        <Label text="CAFE SIMULATION" styleClass="header-title"/>
+    </HBox>
+
+
+    <ScrollPane fitToWidth="true" styleClass="scroll-pane" VBox.vgrow="ALWAYS">
+        <VBox spacing="24" styleClass="content">
+            <padding><Insets top="32" right="40" bottom="32" left="40"/></padding>
+
+
+            <VBox styleClass="section" spacing="16">
+                <Label text="ЗАГАЛЬНІ ПАРАМЕТРИ" styleClass="section-title"/>
+                <HBox spacing="24" alignment="CENTER_LEFT">
+
+                    <VBox styleClass="field-group" spacing="6">
+                        <Label text="Кількість столів" styleClass="field-label"/>
+                        <Spinner fx:id="tablesCountSpinner"
+                                 min="1" max="20" initialValue="5"
+                                 editable="true"
+                                 styleClass="spinner"
+                                 prefWidth="140"/>
+                    </VBox>
+
+                    <VBox styleClass="field-group" spacing="6">
+                        <Label text="Тривалість симуляції (тіки)" styleClass="field-label"/>
+                        <Spinner fx:id="durationSpinner"
+                                 min="100" max="10000" initialValue="1000"
+                                 editable="true"
+                                 styleClass="spinner"
+                                 prefWidth="180"/>
+                    </VBox>
+
+                    <VBox styleClass="field-group" spacing="6">
+                        <Label text="Затримка між тіками (мс)" styleClass="field-label"/>
+                        <Spinner fx:id="tickDelaySpinner"
+                                 min="0" max="1000" initialValue="100"
+                                 editable="true"
+                                 styleClass="spinner"
+                                 prefWidth="180"/>
+                    </VBox>
+
+                </HBox>
+            </VBox>
+
+
+            <Separator styleClass="divider"/>
+
+
+            <VBox styleClass="section" spacing="16">
+                <Label text="КЛІЄНТИ" styleClass="section-title"/>
+                <HBox spacing="24" alignment="CENTER_LEFT">
+
+                    <VBox styleClass="field-group" spacing="6">
+                        <Label text="Середній час між візитами (тіки)" styleClass="field-label"/>
+                        <Spinner fx:id="arrivalMeanSpinner"
+                                 min="1" max="120" initialValue="15"
+                                 editable="true"
+                                 styleClass="spinner"
+                                 prefWidth="200"/>
+                        <Label text="ExponentialDistribution" styleClass="field-hint"/>
+                    </VBox>
+
+                    <VBox styleClass="field-group" spacing="6">
+                        <Label text="Середнє терпіння клієнта (тіки)" styleClass="field-label"/>
+                        <Spinner fx:id="patienceMeanSpinner"
+                                 min="5" max="200" initialValue="20"
+                                 editable="true"
+                                 styleClass="spinner"
+                                 prefWidth="200"/>
+                        <Label text="ExponentialDistribution" styleClass="field-hint"/>
+                    </VBox>
+
+                </HBox>
+            </VBox>
+
+
+            <Separator styleClass="divider"/>
+
+
+            <VBox styleClass="section" spacing="16">
+                <HBox alignment="CENTER_LEFT" spacing="16">
+                    <Label text="ОФІЦІАНТИ" styleClass="section-title"/>
+                    <Button text="+ Додати" styleClass="btn-add"
+                            onAction="#onAddWaiter"/>
+                </HBox>
+
+                <VBox fx:id="waitersContainer" spacing="8" styleClass="staff-list"/>
+
+                <Label fx:id="waitersHint"
+                       text="Мінімум 1 офіціант"
+                       styleClass="field-hint"/>
+            </VBox>
+
+
+            <Separator styleClass="divider"/>
+
+
+            <VBox styleClass="section" spacing="16">
+                <HBox alignment="CENTER_LEFT" spacing="16">
+                    <Label text="ШЕФИ" styleClass="section-title"/>
+                    <Button text="+ Додати" styleClass="btn-add"
+                            onAction="#onAddChef"/>
+                </HBox>
+
+                <VBox fx:id="chefsContainer" spacing="8" styleClass="staff-list"/>
+
+                <Label fx:id="chefsHint"
+                       text="Мінімум 1 шеф"
+                       styleClass="field-hint"/>
+            </VBox>
+
+
+            <Separator styleClass="divider"/>
+
+
+            <VBox styleClass="section" spacing="16">
+                <Label text="ЧАС ОБСЛУГОВУВАННЯ" styleClass="section-title"/>
+                <HBox spacing="24" alignment="CENTER_LEFT">
+
+                    <VBox styleClass="field-group" spacing="6">
+                        <Label text="Середній час (тіки)" styleClass="field-label"/>
+                        <Spinner fx:id="serviceMeanSpinner"
+                                 min="1" max="30" initialValue="5"
+                                 editable="true"
+                                 styleClass="spinner"
+                                 prefWidth="160"/>
+                        <Label text="NormalDistribution (mean)" styleClass="field-hint"/>
+                    </VBox>
+
+                    <VBox styleClass="field-group" spacing="6">
+                        <Label text="Відхилення (stdDev)" styleClass="field-label"/>
+                        <Spinner fx:id="serviceStdDevSpinner"
+                                 min="0" max="10" initialValue="2"
+                                 editable="true"
+                                 styleClass="spinner"
+                                 prefWidth="160"/>
+                        <Label text="NormalDistribution (stdDev)" styleClass="field-hint"/>
+                    </VBox>
+
+                    <VBox styleClass="field-group" spacing="6">
+                        <Label text="Середній час їжі (тіки)" styleClass="field-label"/>
+                        <Spinner fx:id="eatingMeanSpinner"
+                                 min="5" max="120" initialValue="25"
+                                 editable="true"
+                                 styleClass="spinner"
+                                 prefWidth="160"/>
+                        <Label text="NormalDistribution (mean)" styleClass="field-hint"/>
+                    </VBox>
+
+                </HBox>
+            </VBox>
+
+        </VBox>
+    </ScrollPane>
+
+
+    <HBox styleClass="footer" alignment="CENTER_RIGHT" spacing="16">
+        <padding><Insets top="16" right="40" bottom="16" left="40"/></padding>
+        <Label fx:id="validationLabel" styleClass="validation-error"/>
+        <Button text="ЗАПУСТИТИ СИМУЛЯЦІЮ"
+                styleClass="btn-start"
+                onAction="#onStartSimulation"/>
+    </HBox>
+
+</VBox>
