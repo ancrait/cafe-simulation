@@ -25,7 +25,6 @@ public class SimulationCore {
     private Map<Staff, Order> activeKitchenOrders;
     private List<TaskAssignmentStrategy> taskStrategies;
     private StatisticsCollector statisticsCollector;
-    private List<Table> tables;
     private NormalDistribution eatingDistribution;
     private final TableService tableService;
     private final MenuService menuService;
@@ -59,7 +58,6 @@ public class SimulationCore {
         );
 
         this.statisticsCollector = new StatisticsCollector();
-        this.tables = new ArrayList<>();
         this.tableService = new TableService(config.getTableCount());
         this.menuService = new MenuService();
 
@@ -76,7 +74,8 @@ public class SimulationCore {
     public NormalDistribution getEatingDistribution() {return eatingDistribution;}
     public TableService getTableService() {return tableService;}
     public MenuService getMenuService() { return menuService; }
-
+    public SimulationEventLog getEventLog() {return eventLog;}
+    public List<Staff> getStaffList() {return staffList;}
 
     public void addStaff(Staff staff) {
         staffList.add(staff);
@@ -165,16 +164,21 @@ public class SimulationCore {
 
 
     private void handleCustomersEating() {
-        for (Table table : tables) {
+        for (Table table : tableService.getTables()) {
             if (table.getTableStatus() == TableStatus.OCCUPIED
                     && table.getCurrentCustomer() != null
+                    && table.getOccupiedUntil() > 0
                     && table.getCurrentCustomer().getOrder().getOrderStatus() == OrderStatus.DELIVERED
                     && currentTime >= table.getOccupiedUntil()) {
 
+                String customerName = table.getCurrentCustomer().getName();
+                long tableId = table.getId();
+                eventLog.add(currentTime, customerName + " завершив їжу за столом #" + tableId);
                 table.markAsFinished();
-                }
+                eventLog.add(currentTime, " Стіл #" + tableId + " потребує прибирання");
             }
         }
+    }
     }
 
 
