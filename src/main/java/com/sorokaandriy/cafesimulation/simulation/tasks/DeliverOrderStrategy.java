@@ -28,6 +28,9 @@ public class DeliverOrderStrategy implements TaskAssignmentStrategy{
             if (table != null){
                 long eatingTime = Math.round(Math.max(1, core.getEatingDistribution().sample()));
                 table.startEating(core.getCurrentTime(), eatingTime);
+                core.logEvent(order.getCustomer().getName()
+                        + " починає їсти за столом #" + table.getId()
+                        + " (~" + eatingTime + " тіків)");
             }
 
             long time = Math.round(Math.max(1, core.getServiceDistribution().sample()));

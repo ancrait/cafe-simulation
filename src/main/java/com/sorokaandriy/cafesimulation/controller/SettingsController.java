@@ -95,7 +95,7 @@ public class SettingsController {
         TextField nameField = new TextField(defaultName);
         nameField.getStyleClass().add("staff-name-field");
 
-        // ComboBox спеціалізації
+
         ComboBox<String> specCombo = new ComboBox<>();
         specCombo.getStyleClass().add("combo-specialization");
         specCombo.getItems().addAll("Універсальний", "Тільки страви", "Тільки напої");
@@ -156,6 +156,7 @@ public class SettingsController {
                 durationSpinner.getValue(),
                 tickDelaySpinner.getValue(),
                 arrivalMeanSpinner.getValue(),
+
                 patienceMeanSpinner.getValue(),
                 serviceMeanSpinner.getValue(),
                 serviceStdDevSpinner.getValue(),
