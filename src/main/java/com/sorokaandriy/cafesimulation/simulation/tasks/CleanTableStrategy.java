@@ -19,6 +19,8 @@ public class CleanTableStrategy implements TaskAssignmentStrategy{
             core.getStatisticsCollector().recordCleanedTable(time);
             core.setWorkerBusy(worker, time);
 
+            core.logEvent(worker.getName() + " прибирає стіл #" + dirtyTable.getId());
+
             return true;
         }
         return false;

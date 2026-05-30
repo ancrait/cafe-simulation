@@ -44,6 +44,10 @@ public class CookOrderStrategy implements TaskAssignmentStrategy{
 
             core.getStatisticsCollector().recordMenuItemCooked(order.getMenuItem(), time);
 
+            core.logEvent(worker.getName() + " почав готувати "
+                    + order.getMenuItem().getDisplayName()
+                    + " (~" + time + " тіків)");
+
             return true;
         }
         return false;
