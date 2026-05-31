@@ -259,11 +259,16 @@ public class SimulationController {
         statusLabel.getStyleClass().setAll("status-finished");
         pauseButton.setDisable(true);
 
-
-        String filename = ReportGenerator.saveReportToJsonFile(
+        savedReportFilename = ReportGenerator.saveReportToJsonFile(
                 core.getStatisticsCollector(), core.getCurrentTime()
         );
-        logListView.getItems().add("[СИСТЕМА] Звіт збережено: " + filename);
+        logListView.getItems().add("[СИСТЕМА] Звіт збережено: " + savedReportFilename);
+
+        javafx.animation.PauseTransition pause = new javafx.animation.PauseTransition(
+                javafx.util.Duration.millis(500)
+        );
+        pause.setOnFinished(e -> openReportScreen());
+        pause.play();
     }
 
     private void openReportScreen() {
@@ -279,6 +284,7 @@ public class SimulationController {
 
             ReportController reportController = loader.getController();
             reportController.initReport(
+
                     core.getStatisticsCollector(),
                     core.getCurrentTime(),
                     allLogLines,

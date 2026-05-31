@@ -11,75 +11,64 @@
       spacing="0">
 
 
-
     <HBox styleClass="header" alignment="CENTER_LEFT" spacing="20">
         <padding><Insets top="12" right="24" bottom="12" left="24"/></padding>
         <Label text="ЗВІТ СИМУЛЯЦІЇ" styleClass="header-title"/>
         <Region HBox.hgrow="ALWAYS"/>
         <Label fx:id="reportSavedLabel" styleClass="report-saved-label"/>
+
         <Button text="← Нова симуляція"
                 styleClass="btn-back" onAction="#onBackToSettings"/>
     </HBox>
 
 
-
     <VBox styleClass="summary-section" spacing="12">
         <padding><Insets top="20" right="24" bottom="20" left="24"/></padding>
         <Label text="ПІДСУМКОВА ІНФОРМАЦІЯ" styleClass="section-title"/>
-
         <HBox spacing="16" alignment="CENTER_LEFT">
-
             <VBox styleClass="stat-card" spacing="4">
                 <Label text="ВСЬОГО КЛІЄНТІВ" styleClass="stat-label"/>
                 <Label fx:id="totalArrivedLabel" text="—" styleClass="stat-value"/>
             </VBox>
-
             <VBox styleClass="stat-card stat-card-success" spacing="4">
                 <Label text="ОБСЛУЖЕНО" styleClass="stat-label"/>
                 <Label fx:id="totalServedLabel" text="—" styleClass="stat-value"/>
             </VBox>
-
             <VBox styleClass="stat-card stat-card-danger" spacing="4">
                 <Label text="ПІШЛИ БЕЗ ОБСЛУГОВУВАННЯ" styleClass="stat-label"/>
                 <Label fx:id="totalLeftLabel" text="—" styleClass="stat-value"/>
             </VBox>
-
             <VBox styleClass="stat-card stat-card-warn" spacing="4">
                 <Label text="ВТРАТИ КЛІЄНТІВ" styleClass="stat-label"/>
                 <Label fx:id="lossRateLabel" text="—" styleClass="stat-value"/>
             </VBox>
-
             <VBox styleClass="stat-card" spacing="4">
                 <Label text="СЕРЕДНЄ ОЧІКУВАННЯ" styleClass="stat-label"/>
                 <Label fx:id="avgWaitLabel" text="—" styleClass="stat-value-sm"/>
             </VBox>
-
             <VBox styleClass="stat-card" spacing="4">
                 <Label text="ПРИБРАНО СТОЛІВ" styleClass="stat-label"/>
                 <Label fx:id="totalTablesCleanedLabel" text="—" styleClass="stat-value"/>
             </VBox>
-
             <VBox styleClass="stat-card" spacing="4">
                 <Label text="СЕРЕДНЄ ПРИБИРАННЯ" styleClass="stat-label"/>
                 <Label fx:id="avgCleanTimeLabel" text="—" styleClass="stat-value-sm"/>
             </VBox>
-
             <VBox styleClass="stat-card" spacing="4">
                 <Label text="ТРИВАЛІСТЬ СИМУЛЯЦІЇ" styleClass="stat-label"/>
                 <Label fx:id="simDurationLabel" text="—" styleClass="stat-value-sm"/>
             </VBox>
-
         </HBox>
     </VBox>
 
 
-
     <HBox VBox.vgrow="ALWAYS" spacing="0">
+
 
         <VBox styleClass="panel-left" spacing="16" prefWidth="460">
             <padding><Insets top="20" right="16" bottom="20" left="24"/></padding>
 
-            <VBox styleClass="section" spacing="12">
+            <VBox styleClass="section" spacing="12" VBox.vgrow="ALWAYS">
                 <Label text="СТАТИСТИКА МЕНЮ" styleClass="section-title"/>
 
 
@@ -104,12 +93,13 @@
 
 
                 <TableView fx:id="menuTable" styleClass="menu-table"
-                           VBox.vgrow="ALWAYS" prefHeight="340">
+                           VBox.vgrow="ALWAYS" prefHeight="300"
+                           columnResizePolicy="CONSTRAINED_RESIZE_POLICY">
                     <columns>
-                        <TableColumn fx:id="colName"    text="Страва"      prefWidth="140"/>
-                        <TableColumn fx:id="colType"    text="Тип"         prefWidth="90"/>
-                        <TableColumn fx:id="colCount"   text="Замовлено"   prefWidth="90"/>
-                        <TableColumn fx:id="colAvgPrep" text="Сер. час (тіків)" prefWidth="120"/>
+                        <TableColumn fx:id="colName"    text="Страва"           prefWidth="130"/>
+                        <TableColumn fx:id="colType"    text="Тип"              prefWidth="100"/>
+                        <TableColumn fx:id="colCount"   text="Замовлено"        prefWidth="100"/>
+                        <TableColumn fx:id="colAvgPrep" text="Сер. час (тіки)"  prefWidth="120"/>
                     </columns>
                     <placeholder>
                         <Label text="Немає даних" styleClass="table-placeholder"/>
@@ -117,7 +107,6 @@
                 </TableView>
             </VBox>
         </VBox>
-
 
 
         <VBox styleClass="panel-right" spacing="16" HBox.hgrow="ALWAYS">
@@ -133,7 +122,7 @@
                         <ToggleGroup fx:id="filterGroup"/>
                     </fx:define>
                     <RadioButton fx:id="filterAll"
-                                 text="Всі"
+                                 text="Всі події"
                                  toggleGroup="$filterGroup"
                                  styleClass="radio-btn"/>
                     <RadioButton fx:id="filterClients"
@@ -144,8 +133,8 @@
                                  text="Кухня"
                                  toggleGroup="$filterGroup"
                                  styleClass="radio-btn"/>
-                    <RadioButton fx:id="filterSystem"
-                                 text="Система"
+                    <RadioButton fx:id="filterCleaning"
+                                 text="Прибирання"
                                  toggleGroup="$filterGroup"
                                  styleClass="radio-btn"/>
                 </HBox>
@@ -160,7 +149,6 @@
                             styleClass="btn-clear-filter"
                             onAction="#onClearFilter"/>
                 </HBox>
-
 
                 <ListView fx:id="filteredLogView"
                           styleClass="log-list"
