@@ -264,11 +264,8 @@ public class SimulationController {
         );
         logListView.getItems().add("[СИСТЕМА] Звіт збережено: " + savedReportFilename);
 
-        javafx.animation.PauseTransition pause = new javafx.animation.PauseTransition(
-                javafx.util.Duration.millis(500)
-        );
-        pause.setOnFinished(e -> openReportScreen());
-        pause.play();
+
+        openReportScreen();
     }
 
     private void openReportScreen() {

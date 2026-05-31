@@ -103,7 +103,7 @@ public class ReportController {
         for (MenuItem item : MenuItem.values()) {
             menuData.add(new MenuRowData(
                     item.getDisplayName(),
-                    item.getType() == com.sorokaandriy.cafesimulation.model.enums.MenuItemType.FOOD ? "🍽 Страва" : "🥤 Напій",
+                    item.getType() == com.sorokaandriy.cafesimulation.model.enums.MenuItemType.FOOD ? " Страва" : " Напій",
                     String.valueOf(stats.getItemOrderCount(item)),
                     String.format("%.2f", stats.getAverageItemPrepTime(item))
             ));
@@ -122,21 +122,18 @@ public class ReportController {
     @FXML
     private void applySorting() {
         List<MenuRowData> sorted = new ArrayList<>(menuData);
-
         if (sortByPopularity.isSelected()) {
 
-            sorted.sort((a, b) -> {
-                long countA = Long.parseLong(a.count());
-                long countB = Long.parseLong(b.count());
-                return Long.compare(countB, countA);
-            });
-        } if (sortByPopularity.isSelected()) {
+            sorted.sort((a, b) -> Long.compare(
+                    Long.parseLong(b.count()),
+                    Long.parseLong(a.count())
+            ));
+        } else if (sortByPrepTime.isSelected()) {
 
-            sorted.sort((a, b) -> {
-                long countA = Long.parseLong(a.count());
-                long countB = Long.parseLong(b.count());
-                return Long.compare(countB, countA);
-            });
+            sorted.sort((a, b) -> Double.compare(
+                    Double.parseDouble(a.avgPrep().replace(",", ".")),
+                    Double.parseDouble(b.avgPrep().replace(",", "."))
+            ));
         } else if (sortByName.isSelected()) {
             sorted.sort((a, b) -> a.name().compareToIgnoreCase(b.name()));
         }
@@ -221,7 +218,6 @@ public class ReportController {
             stage.setScene(scene);
             stage.setTitle("Cafe Simulation — Налаштування");
         } catch (IOException e) {
-            reportSavedLabel.setText("Помилка: " + e.getMessage());
             e.printStackTrace();
         }
     }
