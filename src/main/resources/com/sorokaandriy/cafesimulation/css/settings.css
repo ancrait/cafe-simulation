@@ -208,11 +208,28 @@
     -fx-text-fill: #ff7777;
 }
 
-/* ===== FOOTER ===== */
+
 .footer {
     -fx-background-color: #1a1a1a;
     -fx-border-color: #2e2e2e;
     -fx-border-width: 1 0 0 0;
+}
+
+.btn-secondary {
+    -fx-background-color: transparent;
+    -fx-text-fill: #888888;
+    -fx-border-color: #3a3a3a;
+    -fx-border-radius: 6;
+    -fx-background-radius: 6;
+    -fx-border-width: 1;
+    -fx-font-size: 13px;
+    -fx-padding: 10 18 10 18;
+    -fx-cursor: hand;
+}
+
+.btn-secondary:hover {
+    -fx-text-fill: #f0f0f0;
+    -fx-border-color: #888888;
 }
 
 .btn-start {
