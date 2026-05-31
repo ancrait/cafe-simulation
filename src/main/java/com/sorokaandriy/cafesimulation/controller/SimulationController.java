@@ -20,6 +20,7 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class SimulationController {
@@ -44,6 +45,7 @@ public class SimulationController {
     private Timeline timeline;
     private boolean paused = false;
     private int logIndex = 0;
+    private String savedReportFilename = "";
 
 
     public void initSimulation(SimulationConfig config) {
@@ -262,5 +264,33 @@ public class SimulationController {
                 core.getStatisticsCollector(), core.getCurrentTime()
         );
         logListView.getItems().add("[СИСТЕМА] Звіт збережено: " + filename);
+    }
+
+    private void openReportScreen() {
+        try {
+            FXMLLoader loader = new FXMLLoader(
+                    getClass().getResource(
+                            "/com/sorokaandriy/cafesimulation/report-view.fxml")
+            );
+            Scene scene = new Scene(loader.load());
+
+
+            List<String> allLogLines = new ArrayList<>(logListView.getItems());
+
+            ReportController reportController = loader.getController();
+            reportController.initReport(
+                    core.getStatisticsCollector(),
+                    core.getCurrentTime(),
+                    allLogLines,
+                    savedReportFilename
+            );
+
+            Stage stage = (Stage) logListView.getScene().getWindow();
+            stage.setScene(scene);
+            stage.setTitle("Cafe Simulation — Звіт");
+        } catch (IOException e) {
+            logListView.getItems().add("[СИСТЕМА] Помилка відкриття екрану звіту: " + e.getMessage());
+            e.printStackTrace();
+        }
     }
 }
