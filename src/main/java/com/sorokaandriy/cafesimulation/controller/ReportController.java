@@ -30,6 +30,7 @@ public class ReportController {
     @FXML private Label totalTablesCleanedLabel;
     @FXML private Label avgCleanTimeLabel;
     @FXML private Label simDurationLabel;
+    @FXML private Label reportSavedLabel;
 
 
     @FXML private TableView<MenuRowData> menuTable;
@@ -37,8 +38,6 @@ public class ReportController {
     @FXML private TableColumn<MenuRowData, String> colType;
     @FXML private TableColumn<MenuRowData, String> colCount;
     @FXML private TableColumn<MenuRowData, String> colAvgPrep;
-
-
     @FXML private ToggleGroup sortGroup;
     @FXML private RadioButton sortByPopularity;
     @FXML private RadioButton sortByPrepTime;
@@ -50,23 +49,14 @@ public class ReportController {
     @FXML private RadioButton filterAll;
     @FXML private RadioButton filterClients;
     @FXML private RadioButton filterKitchen;
-    @FXML private RadioButton filterSystem;
-
-
+    @FXML private RadioButton filterCleaning;
     @FXML private ListView<String> filteredLogView;
-
-    @FXML private Label reportSavedLabel;
 
 
     private StatisticsCollector stats;
     private long simulationDuration;
-    private List<String> allLogEvents = new ArrayList<>();
-
-
-    private ObservableList<MenuRowData> menuData = FXCollections.observableArrayList();
-
-
-    private ObservableList<String> allLogObservable = FXCollections.observableArrayList();
+    private final ObservableList<MenuRowData> menuData = FXCollections.observableArrayList();
+    private final ObservableList<String> allLogObservable = FXCollections.observableArrayList();
     private FilteredList<String> filteredLog;
 
 
@@ -77,15 +67,9 @@ public class ReportController {
                            String savedReportFilename) {
         this.stats = stats;
         this.simulationDuration = simulationDuration;
-        this.allLogEvents = logEvents;
-
 
         fillSummaryStats(savedReportFilename);
-
-
         setupMenuTable();
-
-
         setupLogFilter(logEvents);
     }
 
@@ -106,31 +90,30 @@ public class ReportController {
     }
 
     private void setupMenuTable() {
-        // Налаштування колонок
         colName.setCellValueFactory(d -> new SimpleStringProperty(d.getValue().name()));
         colType.setCellValueFactory(d -> new SimpleStringProperty(d.getValue().type()));
         colCount.setCellValueFactory(d -> new SimpleStringProperty(d.getValue().count()));
         colAvgPrep.setCellValueFactory(d -> new SimpleStringProperty(d.getValue().avgPrep()));
 
+        colName.setStyle("-fx-alignment: CENTER-LEFT;");
+        colType.setStyle("-fx-alignment: CENTER;");
+        colCount.setStyle("-fx-alignment: CENTER;");
+        colAvgPrep.setStyle("-fx-alignment: CENTER;");
 
         for (MenuItem item : MenuItem.values()) {
-            long count = stats.getItemOrderCount(item);
-            double avgPrep = stats.getAverageItemPrepTime(item);
             menuData.add(new MenuRowData(
                     item.getDisplayName(),
-                    item.getType().toString(),
-                    String.valueOf(count),
-                    String.format("%.2f", avgPrep)
+                    item.getType() == com.sorokaandriy.cafesimulation.model.enums.MenuItemType.FOOD ? "🍽 Страва" : "🥤 Напій",
+                    String.valueOf(stats.getItemOrderCount(item)),
+                    String.format("%.2f", stats.getAverageItemPrepTime(item))
             ));
         }
-
         menuTable.setItems(menuData);
 
 
         sortByPopularity.setOnAction(e -> applySorting());
         sortByPrepTime.setOnAction(e -> applySorting());
         sortByName.setOnAction(e -> applySorting());
-
         sortByPopularity.setSelected(true);
         applySorting();
     }
@@ -142,18 +125,19 @@ public class ReportController {
 
         if (sortByPopularity.isSelected()) {
 
-            sorted.sort((a, b) -> Long.compare(
-                    Long.parseLong(b.count()),
-                    Long.parseLong(a.count())
-            ));
-        } else if (sortByPrepTime.isSelected()) {
+            sorted.sort((a, b) -> {
+                long countA = Long.parseLong(a.count());
+                long countB = Long.parseLong(b.count());
+                return Long.compare(countB, countA);
+            });
+        } if (sortByPopularity.isSelected()) {
 
-            sorted.sort((a, b) -> Double.compare(
-                    Double.parseDouble(a.avgPrep()),
-                    Double.parseDouble(b.avgPrep())
-            ));
+            sorted.sort((a, b) -> {
+                long countA = Long.parseLong(a.count());
+                long countB = Long.parseLong(b.count());
+                return Long.compare(countB, countA);
+            });
         } else if (sortByName.isSelected()) {
-
             sorted.sort((a, b) -> a.name().compareToIgnoreCase(b.name()));
         }
 
@@ -163,52 +147,54 @@ public class ReportController {
 
     private void setupLogFilter(List<String> logEvents) {
         allLogObservable.setAll(logEvents);
-
-
         filteredLog = new FilteredList<>(allLogObservable, s -> true);
         filteredLogView.setItems(filteredLog);
-
 
         filterAll.setOnAction(e -> applyFilter());
         filterClients.setOnAction(e -> applyFilter());
         filterKitchen.setOnAction(e -> applyFilter());
-        filterSystem.setOnAction(e -> applyFilter());
-
-
-        filterTextField.textProperty().addListener((obs, oldVal, newVal) -> applyFilter());
+        filterCleaning.setOnAction(e -> applyFilter());
+        filterTextField.textProperty().addListener((obs, o, n) -> applyFilter());
 
         filterAll.setSelected(true);
         applyFilter();
     }
 
-
     @FXML
     private void applyFilter() {
-        String searchText = filterTextField.getText().toLowerCase().trim();
+        String search = filterTextField.getText().toLowerCase().trim();
 
         filteredLog.setPredicate(line -> {
             if (line == null) return false;
 
+            boolean categoryMatch;
 
-            boolean categoryMatch = true;
             if (filterClients.isSelected()) {
 
-                categoryMatch = line.contains("Клієнт") || line.contains("очікував")
-                        || line.contains("їсти") || line.contains("завершив їжу");
+                categoryMatch = line.contains("прийшов")
+                        || line.contains("пішов")
+                        || line.contains("починає їсти")
+                        || line.contains("завершив їжу")
+                        || line.contains("очікував");
             } else if (filterKitchen.isSelected()) {
 
-                categoryMatch = line.contains("готував") || line.contains("готує")
-                        || line.contains("замовлення") || line.contains("доставив");
-            } else if (filterSystem.isSelected()) {
+                categoryMatch = line.contains("прийняв замовлення")
+                        || line.contains("почав готувати")
+                        || line.contains("доставив")
+                        || line.contains("приготував");
+            } else if (filterCleaning.isSelected()) {
 
-                categoryMatch = line.contains("[СИСТЕМА]") || line.contains("прибирає")
-                        || line.contains("стіл") || line.contains("Звіт");
+                categoryMatch = line.contains("прибирає стіл")
+                        || line.contains("вільний")
+                        || line.contains("потребує прибирання")
+                        || line.contains("Стіл #");
+            } else {
+
+                categoryMatch = true;
             }
 
-
-
-            boolean textMatch = searchText.isEmpty()
-                    || line.toLowerCase().contains(searchText);
+            boolean textMatch = search.isEmpty()
+                    || line.toLowerCase().contains(search);
 
             return categoryMatch && textMatch;
         });
@@ -228,13 +214,14 @@ public class ReportController {
         try {
             FXMLLoader loader = new FXMLLoader(
                     getClass().getResource(
-                            "/com/sorokaandriy/cafesimulation/report-view.fxml")
+                            "/com/sorokaandriy/cafesimulation/settings-view.fxml")
             );
             Scene scene = new Scene(loader.load());
             Stage stage = (Stage) menuTable.getScene().getWindow();
             stage.setScene(scene);
             stage.setTitle("Cafe Simulation — Налаштування");
         } catch (IOException e) {
+            reportSavedLabel.setText("Помилка: " + e.getMessage());
             e.printStackTrace();
         }
     }
