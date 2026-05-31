@@ -104,8 +104,7 @@ public class SimulationController {
         }
 
         for (Order order : core.getPendingOrders()) {
-            ordersListView.getItems().add(
-                    "⏳ " + order.getMenuItem().getDisplayName()
+            ordersListView.getItems().add(order.getMenuItem().getDisplayName()
                             + " → " + order.getCustomer().getName() + " [в черзі]"
             );
         }
@@ -153,13 +152,9 @@ public class SimulationController {
         };
         card.getStyleClass().add(statusStyle);
 
-        String icon = switch (table.getTableStatus()) {
-            case FREE     -> "🟢";
-            case OCCUPIED -> "🔴";
-            case DIRTY    -> "🟡";
-        };
 
-        Label idLabel = new Label(icon + " Стіл #" + table.getId());
+
+        Label idLabel = new Label(" Стіл #" + table.getId());
         idLabel.getStyleClass().add("table-id");
 
         Label statusLabel = new Label(table.getTableStatus().toString());
@@ -182,8 +177,8 @@ public class SimulationController {
             HBox row = new HBox(10);
             row.getStyleClass().add("staff-row");
 
-            String icon = (worker instanceof Chef) ? "👨‍🍳" : "👤";
-            Label nameLabel = new Label(icon + " " + worker.getName());
+
+            Label nameLabel = new Label(worker.getName());
             nameLabel.getStyleClass().add("staff-name");
 
             Region spacer = new Region();

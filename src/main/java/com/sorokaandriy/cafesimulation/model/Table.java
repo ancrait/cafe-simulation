@@ -28,19 +28,19 @@ public class Table {
 
     public TableStatus getTableStatus() {
         return tableStatus;
-    }
+    }//
 
     public void setTableStatus(TableStatus tableStatus) {
         this.tableStatus = tableStatus;
-    }
+    }//
 
     public Customer getCurrentCustomer() {
         return currentCustomer;
-    }
+    }//
 
     public void setCurrentCustomer(Customer currentCustomer) {
         this.currentCustomer = currentCustomer;
-    }
+    }//
 
     public long getOccupiedUntil() {return occupiedUntil;}
 

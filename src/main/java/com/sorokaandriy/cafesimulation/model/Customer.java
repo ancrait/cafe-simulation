@@ -20,8 +20,8 @@ public class Customer extends Person{
     public long getArrivalTime() { return arrivalTime; }
     public void setArrivalTime(long arrivalTime) { this.arrivalTime = arrivalTime; }
 
-    public Order getOrder() { return order; }
-    public void setOrder(Order order) { this.order = order; }
+    public Order getOrder() { return order; } //
+    public void setOrder(Order order) { this.order = order; } //
 
     public long getPatience() { return patience; }
     public void setPatience(long patience) { this.patience = patience; }
@@ -29,7 +29,7 @@ public class Customer extends Person{
 
     public boolean hasRunOutOfPatience(long currentTime) {
         return (currentTime - arrivalTime) > patience;
-    }
+    } //
 
 
     @Override
