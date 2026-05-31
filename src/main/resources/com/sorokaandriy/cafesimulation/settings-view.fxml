@@ -167,12 +167,26 @@
     </ScrollPane>
 
 
-    <HBox styleClass="footer" alignment="CENTER_RIGHT" spacing="16">
+    <!-- FOOTER -->
+    <HBox styleClass="footer" alignment="CENTER_RIGHT" spacing="12">
         <padding><Insets top="16" right="40" bottom="16" left="40"/></padding>
+
         <Label fx:id="validationLabel" styleClass="validation-error"/>
-        <Button text="ЗАПУСТИТИ СИМУЛЯЦІЮ"
+
+        <Region HBox.hgrow="ALWAYS"/>
+
+        <Button text="Зберегти налаштування"
+                styleClass="btn-secondary"
+                onAction="#onSaveConfig"/>
+
+        <Button text="Завантажити налаштування"
+                styleClass="btn-secondary"
+                onAction="#onLoadConfig"/>
+
+        <Button text="ЗАПУСТИТИ СИМУЛЯЦІЮ →"
                 styleClass="btn-start"
                 onAction="#onStartSimulation"/>
     </HBox>
+
 
 </VBox>

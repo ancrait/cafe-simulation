@@ -1,5 +1,6 @@
 package com.sorokaandriy.cafesimulation.controller;
 
+import com.sorokaandriy.cafesimulation.config.ConfigService;
 import com.sorokaandriy.cafesimulation.model.Chef;
 import com.sorokaandriy.cafesimulation.model.Staff;
 import com.sorokaandriy.cafesimulation.model.Waiter;
@@ -13,8 +14,10 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -43,6 +46,73 @@ public class SettingsController {
         addWaiterRow("Офіціант-1");
         addChefRow("Шеф-1", null);
         addChefRow("Шеф-2", MenuItemType.DRINK);
+    }
+
+    @FXML
+    private void onSaveConfig() {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Зберегти конфігурацію");
+        fileChooser.setInitialFileName("cafe-config.json");
+        fileChooser.getExtensionFilters().add(
+                new FileChooser.ExtensionFilter("JSON файли", "*.json")
+        );
+
+        Stage stage = (Stage) tablesCountSpinner.getScene().getWindow();
+        File file = fileChooser.showSaveDialog(stage);
+        if (file == null) return;
+
+        try {
+            SimulationConfig config = buildConfig();
+            ConfigService.saveConfig(config, file.getAbsolutePath());
+            showInfo("Конфігурацію збережено: " + file.getName());
+        } catch (Exception e) {
+            validationLabel.setText("Помилка збереження: " + e.getMessage());
+        }
+    }
+
+    @FXML
+    private void onLoadConfig() {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Завантажити конфігурацію");
+        fileChooser.getExtensionFilters().add(
+                new FileChooser.ExtensionFilter("JSON файли", "*.json")
+        );
+
+        Stage stage = (Stage) tablesCountSpinner.getScene().getWindow();
+        File file = fileChooser.showOpenDialog(stage);
+        if (file == null) return;
+
+        try {
+            SimulationConfig config = ConfigService.loadConfig(file.getAbsolutePath());
+            applyConfig(config);
+            showInfo("Конфігурацію завантажено: " + file.getName());
+        } catch (Exception e) {
+            validationLabel.setText("Помилка завантаження: " + e.getMessage());
+        }
+    }
+
+    private void applyConfig(SimulationConfig config) {
+        tablesCountSpinner.getValueFactory().setValue(config.getTableCount());
+        durationSpinner.getValueFactory().setValue(config.getSimulationDuration());
+        tickDelaySpinner.getValueFactory().setValue(config.getTickDelayMs());
+        arrivalMeanSpinner.getValueFactory().setValue((int) config.getArrivalMean());
+        patienceMeanSpinner.getValueFactory().setValue((int) config.getPatienceMean());
+        serviceMeanSpinner.getValueFactory().setValue((int) config.getServiceMean());
+        serviceStdDevSpinner.getValueFactory().setValue((int) config.getServiceStdDev());
+        eatingMeanSpinner.getValueFactory().setValue((int) config.getEatingMean());
+
+        waitersContainer.getChildren().clear();
+        chefsContainer.getChildren().clear();
+        waiterIdCounter = 1;
+        chefIdCounter = 100;
+
+        for (Staff s : config.getStaffList()) {
+            if (s instanceof Chef chef) {
+                addChefRow(chef.getName(), chef.getSpecialization());
+            } else {
+                addWaiterRow(s.getName());
+            }
+        }
     }
 
 
@@ -182,6 +252,46 @@ public class SettingsController {
             e.printStackTrace();
         }
     }
+
+    private SimulationConfig buildConfig() {
+        List<Staff> staffList = new ArrayList<>();
+
+        for (var node : waitersContainer.getChildren()) {
+            HBox row = (HBox) node;
+            long id = (long) row.getUserData();
+            String name = ((TextField) row.getChildren().get(1)).getText().trim();
+            if (name.isEmpty()) name = "Офіціант-" + id;
+            staffList.add(new Waiter(id, name, true));
+        }
+
+        for (var node : chefsContainer.getChildren()) {
+            HBox row = (HBox) node;
+            long id = (long) row.getUserData();
+            String name = ((TextField) row.getChildren().get(1)).getText().trim();
+            if (name.isEmpty()) name = "Шеф-" + id;
+            String specValue = ((ComboBox<String>) row.getChildren().get(2)).getValue();
+            MenuItemType spec = fromComboValue(specValue);
+            staffList.add(new Chef(id, name, true, spec));
+        }
+
+        return new SimulationConfig(
+                tablesCountSpinner.getValue(),
+                durationSpinner.getValue(),
+                tickDelaySpinner.getValue(),
+                arrivalMeanSpinner.getValue(),
+                patienceMeanSpinner.getValue(),
+                serviceMeanSpinner.getValue(),
+                serviceStdDevSpinner.getValue(),
+                eatingMeanSpinner.getValue(),
+                staffList
+        );
+    }
+
+    private void showInfo(String message) {
+        validationLabel.setStyle("-fx-text-fill: #4caf82;");
+        validationLabel.setText(message);
+    }
+
 
 
     private String toComboValue(MenuItemType type) {

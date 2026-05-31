@@ -154,9 +154,9 @@ public class SimulationController {
         card.getStyleClass().add(statusStyle);
 
         String icon = switch (table.getTableStatus()) {
-            case FREE     -> "🟢";
-            case OCCUPIED -> "🔴";
-            case DIRTY    -> "🟡";
+            case FREE     -> "\uD83D\uDFE2";
+            case OCCUPIED -> "\uD83D\uDD34";
+            case DIRTY    -> "\uD83D\uDFE1";
         };
 
         Label idLabel = new Label(icon + " Стіл #" + table.getId());
