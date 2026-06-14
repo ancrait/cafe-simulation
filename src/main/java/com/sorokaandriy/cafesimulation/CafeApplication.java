@@ -6,6 +6,8 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.util.logging.LogManager;
 
 public class CafeApplication extends Application {
     @Override
@@ -22,6 +24,12 @@ public class CafeApplication extends Application {
     }
 
     public static void main(String[] args) {
+        try (InputStream is = CafeApplication.class.getResourceAsStream("/logging.properties")) {
+            if (is != null) {
+                LogManager.getLogManager().readConfiguration(is);
+            }
+        } catch (IOException ignored) {
+        }
         launch();
     }
 }

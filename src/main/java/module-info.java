@@ -5,6 +5,7 @@ module com.sorokaandriy.cafesimulation {
     requires org.controlsfx.controls;
     requires org.kordamp.ikonli.javafx;
     requires commons.math3;
+    requires java.logging;
 
     opens com.sorokaandriy.cafesimulation to javafx.fxml;
     opens com.sorokaandriy.cafesimulation.controller to javafx.fxml;
