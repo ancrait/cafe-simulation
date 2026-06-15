@@ -1,9 +1,11 @@
 package com.sorokaandriy.cafesimulation.simulation;
 
+import com.sorokaandriy.cafesimulation.config.SimulationConfig;
 import com.sorokaandriy.cafesimulation.model.*;
 import java.util.*;
 import com.sorokaandriy.cafesimulation.model.enums.OrderStatus;
 import com.sorokaandriy.cafesimulation.model.enums.TableStatus;
+import com.sorokaandriy.cafesimulation.simulation.log.SimulationEventLog;
 import com.sorokaandriy.cafesimulation.simulation.service.MenuService;
 import com.sorokaandriy.cafesimulation.simulation.service.TableService;
 import com.sorokaandriy.cafesimulation.simulation.statistics.StatisticsCollector;
@@ -23,25 +25,29 @@ public class SimulationCore {
     private Map<Staff, Order> activeKitchenOrders;
     private List<TaskAssignmentStrategy> taskStrategies;
     private StatisticsCollector statisticsCollector;
-    private List<Table> tables;
     private NormalDistribution eatingDistribution;
     private final TableService tableService;
     private final MenuService menuService;
     private final ExponentialDistribution patienceDistribution;
 
-    public SimulationCore() {
+    private final SimulationEventLog eventLog;
+
+    public SimulationCore(SimulationConfig config) {
         this.customerQueue = new LinkedList<>();
         this.pendingOrders = new LinkedList<>();
         this.readyOrders = new LinkedList<>();
         this.currentTime = 0;
 
-        this.arrivalDistribution = new ExponentialDistribution(15.0);
-        this.nextCustomerArrivalTime = Math.round(arrivalDistribution.sample());
-        this.serviceDistribution = new NormalDistribution(5.0, 1.5);
-
         this.activeKitchenOrders = new HashMap<>();
 
-        this.staffList = new ArrayList<>();
+        this.arrivalDistribution = new ExponentialDistribution(config.getArrivalMean());
+        this.nextCustomerArrivalTime = Math.round(arrivalDistribution.sample());
+        this.serviceDistribution = new NormalDistribution(config.getServiceMean(), config.getServiceStdDev());
+        this.eatingDistribution = new NormalDistribution(config.getEatingMean(), config.getEatingMean() * 0.2);
+        this.patienceDistribution = new ExponentialDistribution(config.getPatienceMean());
+
+
+        this.staffList = new ArrayList<>(config.getStaffList());
 
 
         this.taskStrategies = Arrays.asList(
@@ -52,12 +58,10 @@ public class SimulationCore {
         );
 
         this.statisticsCollector = new StatisticsCollector();
-        this.tables = new ArrayList<>();
-        this.eatingDistribution = new NormalDistribution(25.0, 5.0);
-        this.tableService = new TableService(5);
+        this.tableService = new TableService(config.getTableCount());
         this.menuService = new MenuService();
 
-        this.patienceDistribution = new ExponentialDistribution(20.0);
+        this.eventLog = new SimulationEventLog();
     }
 
     public long getCurrentTime() { return currentTime; }
@@ -70,6 +74,12 @@ public class SimulationCore {
     public NormalDistribution getEatingDistribution() {return eatingDistribution;}
     public TableService getTableService() {return tableService;}
     public MenuService getMenuService() { return menuService; }
+    public SimulationEventLog getEventLog() {return eventLog;}
+    public List<Staff> getStaffList() {return staffList;}
+
+    public void addStaff(Staff staff) {
+        staffList.add(staff);
+    }
 
     public void tick() {
         currentTime++;
@@ -92,6 +102,7 @@ public class SimulationCore {
         handleImpatientCustomers();
         assignTasks();
         handleCustomersEating();
+        handleChefRecovery();
     }
 
 
@@ -133,24 +144,41 @@ public class SimulationCore {
         }
     }
 
+    private void handleChefRecovery() {
+        for (Staff worker : staffList) {
+            if (worker instanceof Chef && worker.isAvailable()) {
+                ((Chef) worker).recover();
+            }
+        }
+    }
+
 
     public void setWorkerBusy(Staff worker, long duration) {
         worker.setAvailable(false);
         worker.setBusyUntil(currentTime + duration);
     }
 
+    public void logEvent(String message) {
+        eventLog.add(currentTime, message);
+    }
+
 
     private void handleCustomersEating() {
-        for (Table table : tables) {
+        for (Table table : tableService.getTables()) {
             if (table.getTableStatus() == TableStatus.OCCUPIED
                     && table.getCurrentCustomer() != null
+                    && table.getOccupiedUntil() > 0
                     && table.getCurrentCustomer().getOrder().getOrderStatus() == OrderStatus.DELIVERED
                     && currentTime >= table.getOccupiedUntil()) {
 
+                String customerName = table.getCurrentCustomer().getName();
+                long tableId = table.getId();
+                eventLog.add(currentTime, customerName + " завершив їжу за столом #" + tableId);
                 table.markAsFinished();
-                }
+                eventLog.add(currentTime, " Стіл #" + tableId + " потребує прибирання");
             }
         }
+    }
     }
 
 

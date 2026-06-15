@@ -7,6 +7,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Locale;
 
 public class ReportGenerator {
 
@@ -16,22 +17,22 @@ public class ReportGenerator {
 
         String generatedAt = LocalDateTime.now()
                 .format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-        String avgWaitTime  = String.format("%.2f", stats.getAverageWaitTime());
-        String avgCleanTime = String.format("%.2f", stats.getAverageCleaningTime());
+        String avgWaitTime  = String.format(Locale.ROOT, "%.2f", stats.getAverageWaitTime());
+        String avgCleanTime = String.format(Locale.ROOT, "%.2f", stats.getAverageCleaningTime());
 
-        String lossRate = String.format("%.2f", stats.getCustomerLossRate());
+        String lossRate = String.format(Locale.ROOT, "%.2f", stats.getCustomerLossRate());
 
         StringBuilder menuStats = new StringBuilder();
         MenuItem[] items = MenuItem.values();
         for (int i = 0; i < items.length; i++) {
             MenuItem item = items[i];
-            String avgPrep = String.format("%.2f", stats.getAverageItemPrepTime(item));
-            menuStats.append("{\n")
-                    .append("\"name\": \"").append(item.getDisplayName()).append("\",\n")
-                    .append("\"type\": \"").append(item.getType()).append("\",\n")
-                    .append("\"totalOrdered\": ").append(stats.getItemOrderCount(item)).append(",\n")
-                    .append("\"averagePrepTimeTicks\": ").append(avgPrep).append("\n")
-                    .append("}");
+            String avgPrep = String.format(Locale.ROOT, "%.2f", stats.getAverageItemPrepTime(item));
+            menuStats.append("        {\n")
+                    .append("          \"name\": \"").append(item.getDisplayName()).append("\",\n")
+                    .append("          \"type\": \"").append(item.getType()).append("\",\n")
+                    .append("          \"totalOrdered\": ").append(stats.getItemOrderCount(item)).append(",\n")
+                    .append("          \"averagePrepTimeTicks\": ").append(avgPrep).append("\n")
+                    .append("        }");
             if (i < items.length - 1) menuStats.append(",");
             menuStats.append("\n");
         }

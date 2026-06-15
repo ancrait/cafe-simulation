@@ -13,11 +13,16 @@ public class CleanTableStrategy implements TaskAssignmentStrategy{
 
         if (worker instanceof CustomerHandler && dirtyTable != null) {
 
+
+            long tableId = dirtyTable.getId();
+            core.logEvent(worker.getName() + " прибирає стіл #" + tableId);
             dirtyTable.clean();
 
             long time = Math.round(Math.max(1, core.getServiceDistribution().sample()));
             core.getStatisticsCollector().recordCleanedTable(time);
             core.setWorkerBusy(worker, time);
+
+            core.logEvent(worker.getName() + " прибирає стіл #" + dirtyTable.getId());
 
             return true;
         }

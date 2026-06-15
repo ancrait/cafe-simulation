@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.sorokaandriy.cafesimulation.controller.SimulationController"
+      stylesheets="@css/simulation.css"
+      styleClass="root-container"
+      spacing="0">
+
+
+    <HBox styleClass="header" alignment="CENTER_LEFT" spacing="20">
+        <padding><Insets top="12" right="24" bottom="12" left="24"/></padding>
+        <Label text="☕ CAFÉ SIMULATION" styleClass="header-title"/>
+        <Region HBox.hgrow="ALWAYS"/>
+        <Label fx:id="tickLabel" text="Тік: 0" styleClass="tick-label"/>
+        <Button fx:id="pauseButton" text="⏸ Пауза"
+                styleClass="btn-pause" onAction="#onPauseResume"/>
+        <Button text="⏹ Зупинити"
+                styleClass="btn-stop" onAction="#onStop"/>
+    </HBox>
+
+
+    <HBox VBox.vgrow="ALWAYS" spacing="0">
+
+
+        <VBox styleClass="left-panel" spacing="16" prefWidth="420">
+            <padding><Insets top="20" right="16" bottom="20" left="20"/></padding>
+
+
+            <VBox styleClass="section" spacing="12">
+                <Label text="СТОЛИ" styleClass="section-title"/>
+                <GridPane fx:id="tablesGrid" hgap="10" vgap="10"/>
+            </VBox>
+
+
+            <VBox styleClass="section" spacing="8">
+                <HBox alignment="CENTER_LEFT" spacing="8">
+                    <Label text="ЧЕРГА" styleClass="section-title"/>
+                    <Label fx:id="queueCountLabel" text="0" styleClass="count-badge"/>
+                </HBox>
+                <ListView fx:id="queueListView" styleClass="queue-list" prefHeight="100"/>
+            </VBox>
+
+
+            <VBox styleClass="section" spacing="8" VBox.vgrow="ALWAYS">
+                <Label text="ПЕРСОНАЛ" styleClass="section-title"/>
+                <VBox fx:id="staffContainer" spacing="6"/>
+            </VBox>
+
+        </VBox>
+
+
+        <VBox styleClass="right-panel" spacing="16" HBox.hgrow="ALWAYS">
+            <padding><Insets top="20" right="20" bottom="20" left="16"/></padding>
+
+
+            <VBox styleClass="section" spacing="8">
+                <HBox alignment="CENTER_LEFT" spacing="8">
+                    <Label text="АКТИВНІ ЗАМОВЛЕННЯ" styleClass="section-title"/>
+                    <Label fx:id="ordersCountLabel" text="0" styleClass="count-badge"/>
+                </HBox>
+                <ListView fx:id="ordersListView" styleClass="orders-list" prefHeight="160"/>
+            </VBox>
+
+
+            <VBox styleClass="section" spacing="8" VBox.vgrow="ALWAYS">
+                <HBox alignment="CENTER_LEFT" spacing="8">
+                    <Label text="ЛОГ ПОДІЙ" styleClass="section-title"/>
+                    <Button text="Очистити" styleClass="btn-clear"
+                            onAction="#onClearLog"/>
+                </HBox>
+                <ListView fx:id="logListView" styleClass="log-list" VBox.vgrow="ALWAYS"/>
+            </VBox>
+
+        </VBox>
+
+    </HBox>
+
+
+    <HBox styleClass="footer" alignment="CENTER_LEFT" spacing="32">
+        <padding><Insets top="12" right="24" bottom="12" left="24"/></padding>
+        <VBox spacing="2">
+            <Label text="ПРИЙШЛО" styleClass="stat-label"/>
+            <Label fx:id="arrivedLabel" text="0" styleClass="stat-value"/>
+        </VBox>
+        <VBox spacing="2">
+            <Label text="ОБСЛУЖЕНО" styleClass="stat-label"/>
+            <Label fx:id="servedLabel" text="0" styleClass="stat-value"/>
+        </VBox>
+        <VBox spacing="2">
+            <Label text="ПІШЛИ" styleClass="stat-label"/>
+            <Label fx:id="leftLabel" text="0" styleClass="stat-value-danger"/>
+        </VBox>
+        <VBox spacing="2">
+            <Label text="СЕРЕДНЄ ОЧІКУВАННЯ" styleClass="stat-label"/>
+            <Label fx:id="avgWaitLabel" text="0.00" styleClass="stat-value"/>
+        </VBox>
+        <Region HBox.hgrow="ALWAYS"/>
+        <Label fx:id="statusLabel" text="● Симуляція йде..." styleClass="status-running"/>
+    </HBox>
+
+</VBox>

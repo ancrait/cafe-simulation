@@ -26,6 +26,11 @@ public class TakeOrderStrategy implements TaskAssignmentStrategy{
             handler.takeOrder(customer);
             core.getPendingOrders().add(newOrder);
 
+            core.logEvent(worker.getName() + " прийняв замовлення від "
+                    + customer.getName() + " — " + selectedItem.getDisplayName()
+                    + " (стіл #" + table.getId() + ")");
+
+
             long time = Math.round(Math.max(1, core.getServiceDistribution().sample()));
             core.setWorkerBusy(worker, time);
 

@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.sorokaandriy.cafesimulation.controller.ReportController"
+      stylesheets="@css/report.css"
+      styleClass="root-container"
+      spacing="0">
+
+
+    <HBox styleClass="header" alignment="CENTER_LEFT" spacing="20">
+        <padding><Insets top="12" right="24" bottom="12" left="24"/></padding>
+        <Label text="ЗВІТ СИМУЛЯЦІЇ" styleClass="header-title"/>
+        <Region HBox.hgrow="ALWAYS"/>
+        <Label fx:id="reportSavedLabel" styleClass="report-saved-label"/>
+
+        <Button text="← Нова симуляція"
+                styleClass="btn-back" onAction="#onBackToSettings"/>
+    </HBox>
+
+
+    <VBox styleClass="summary-section" spacing="12">
+        <padding><Insets top="20" right="24" bottom="20" left="24"/></padding>
+        <Label text="ПІДСУМКОВА ІНФОРМАЦІЯ" styleClass="section-title"/>
+        <HBox spacing="16" alignment="CENTER_LEFT">
+            <VBox styleClass="stat-card" spacing="4">
+                <Label text="ВСЬОГО КЛІЄНТІВ" styleClass="stat-label"/>
+                <Label fx:id="totalArrivedLabel" text="—" styleClass="stat-value"/>
+            </VBox>
+            <VBox styleClass="stat-card stat-card-success" spacing="4">
+                <Label text="ОБСЛУЖЕНО" styleClass="stat-label"/>
+                <Label fx:id="totalServedLabel" text="—" styleClass="stat-value"/>
+            </VBox>
+            <VBox styleClass="stat-card stat-card-danger" spacing="4">
+                <Label text="ПІШЛИ БЕЗ ОБСЛУГОВУВАННЯ" styleClass="stat-label"/>
+                <Label fx:id="totalLeftLabel" text="—" styleClass="stat-value"/>
+            </VBox>
+            <VBox styleClass="stat-card stat-card-warn" spacing="4">
+                <Label text="ВТРАТИ КЛІЄНТІВ" styleClass="stat-label"/>
+                <Label fx:id="lossRateLabel" text="—" styleClass="stat-value"/>
+            </VBox>
+            <VBox styleClass="stat-card" spacing="4">
+                <Label text="СЕРЕДНЄ ОЧІКУВАННЯ" styleClass="stat-label"/>
+                <Label fx:id="avgWaitLabel" text="—" styleClass="stat-value-sm"/>
+            </VBox>
+            <VBox styleClass="stat-card" spacing="4">
+                <Label text="ПРИБРАНО СТОЛІВ" styleClass="stat-label"/>
+                <Label fx:id="totalTablesCleanedLabel" text="—" styleClass="stat-value"/>
+            </VBox>
+            <VBox styleClass="stat-card" spacing="4">
+                <Label text="СЕРЕДНЄ ПРИБИРАННЯ" styleClass="stat-label"/>
+                <Label fx:id="avgCleanTimeLabel" text="—" styleClass="stat-value-sm"/>
+            </VBox>
+            <VBox styleClass="stat-card" spacing="4">
+                <Label text="ТРИВАЛІСТЬ СИМУЛЯЦІЇ" styleClass="stat-label"/>
+                <Label fx:id="simDurationLabel" text="—" styleClass="stat-value-sm"/>
+            </VBox>
+        </HBox>
+    </VBox>
+
+
+    <HBox VBox.vgrow="ALWAYS" spacing="0">
+
+
+        <VBox styleClass="panel-left" spacing="16" prefWidth="460">
+            <padding><Insets top="20" right="16" bottom="20" left="24"/></padding>
+
+            <VBox styleClass="section" spacing="12" VBox.vgrow="ALWAYS">
+                <Label text="СТАТИСТИКА МЕНЮ" styleClass="section-title"/>
+
+
+                <HBox spacing="12" alignment="CENTER_LEFT" styleClass="sort-bar">
+                    <Label text="Сортувати за:" styleClass="sort-label"/>
+                    <fx:define>
+                        <ToggleGroup fx:id="sortGroup"/>
+                    </fx:define>
+                    <RadioButton fx:id="sortByPopularity"
+                                 text="Популярністю"
+                                 toggleGroup="$sortGroup"
+                                 styleClass="radio-btn"/>
+                    <RadioButton fx:id="sortByPrepTime"
+                                 text="Часом приготування"
+                                 toggleGroup="$sortGroup"
+                                 styleClass="radio-btn"/>
+                    <RadioButton fx:id="sortByName"
+                                 text="Назвою"
+                                 toggleGroup="$sortGroup"
+                                 styleClass="radio-btn"/>
+                </HBox>
+
+
+                <TableView fx:id="menuTable" styleClass="menu-table" VBox.vgrow="ALWAYS" prefHeight="340">
+
+                    <columnResizePolicy>
+                        <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                    </columnResizePolicy>
+                    <columns>
+                        <TableColumn fx:id="colName"    text="Страва"      prefWidth="140"/>
+                        <TableColumn fx:id="colType"    text="Тип"         prefWidth="90"/>
+                        <TableColumn fx:id="colCount"   text="Замовлено"   prefWidth="90"/>
+                        <TableColumn fx:id="colAvgPrep" text="Сер. час (тіків)" prefWidth="120"/>
+                    </columns>
+                    <placeholder>
+                        <Label text="Немає даних" styleClass="table-placeholder"/>
+                    </placeholder>
+                </TableView>
+            </VBox>
+        </VBox>
+
+
+        <VBox styleClass="panel-right" spacing="16" HBox.hgrow="ALWAYS">
+            <padding><Insets top="20" right="24" bottom="20" left="16"/></padding>
+
+            <VBox styleClass="section" spacing="12" VBox.vgrow="ALWAYS">
+                <Label text="ЛОГ ПОДІЙ" styleClass="section-title"/>
+
+
+                <HBox spacing="10" alignment="CENTER_LEFT" styleClass="filter-bar">
+                    <Label text="Фільтр:" styleClass="sort-label"/>
+                    <fx:define>
+                        <ToggleGroup fx:id="filterGroup"/>
+                    </fx:define>
+                    <RadioButton fx:id="filterAll"
+                                 text="Всі події"
+                                 toggleGroup="$filterGroup"
+                                 styleClass="radio-btn"/>
+                    <RadioButton fx:id="filterClients"
+                                 text="Клієнти"
+                                 toggleGroup="$filterGroup"
+                                 styleClass="radio-btn"/>
+                    <RadioButton fx:id="filterKitchen"
+                                 text="Кухня"
+                                 toggleGroup="$filterGroup"
+                                 styleClass="radio-btn"/>
+                    <RadioButton fx:id="filterCleaning"
+                                 text="Прибирання"
+                                 toggleGroup="$filterGroup"
+                                 styleClass="radio-btn"/>
+                </HBox>
+
+
+                <HBox spacing="8" alignment="CENTER_LEFT">
+                    <TextField fx:id="filterTextField"
+                               promptText="Пошук у логу..."
+                               styleClass="search-field"
+                               HBox.hgrow="ALWAYS"/>
+                    <Button text="✕ Очистити"
+                            styleClass="btn-clear-filter"
+                            onAction="#onClearFilter"/>
+                </HBox>
+
+                <ListView fx:id="filteredLogView"
+                          styleClass="log-list"
+                          VBox.vgrow="ALWAYS"/>
+            </VBox>
+        </VBox>
+
+    </HBox>
+
+</VBox>
