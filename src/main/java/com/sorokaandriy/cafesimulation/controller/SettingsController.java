@@ -240,11 +240,11 @@ public class SettingsController {
             FXMLLoader loader = new FXMLLoader(
                     getClass().getResource("/com/sorokaandriy/cafesimulation/simulation-view.fxml")
             );
-            Scene scene = new Scene(loader.load()); // створюється нова сцена
-            SimulationController controller = loader.getController(); // новий контролер
-            controller.initSimulation(config); // в контролер передається конфіг (як dto) для даних для подальш симуляції
+            Stage stage = (Stage) tablesCountSpinner.getScene().getWindow();
+            Scene scene = new Scene(loader.load(), stage.getWidth(), stage.getHeight());
+            SimulationController controller = loader.getController();
+            controller.initSimulation(config);
 
-            Stage stage = (Stage) tablesCountSpinner.getScene().getWindow(); // створюється нова сцена
             stage.setScene(scene);
             stage.setTitle("Cafe Simulation — Running");
         } catch (IOException e) {

@@ -72,7 +72,8 @@
                     <Button text="Очистити" styleClass="btn-clear"
                             onAction="#onClearLog"/>
                 </HBox>
-                <ListView fx:id="logListView" styleClass="log-list" VBox.vgrow="ALWAYS"/>
+                <TextArea fx:id="logTextArea" styleClass="log-area" VBox.vgrow="ALWAYS"
+                          editable="false" wrapText="true"/>
             </VBox>
 
         </VBox>

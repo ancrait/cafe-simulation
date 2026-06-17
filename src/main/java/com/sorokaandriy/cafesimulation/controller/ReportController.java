@@ -213,8 +213,8 @@ public class ReportController {
                     getClass().getResource(
                             "/com/sorokaandriy/cafesimulation/settings-view.fxml")
             );
-            Scene scene = new Scene(loader.load());
             Stage stage = (Stage) menuTable.getScene().getWindow();
+            Scene scene = new Scene(loader.load(), stage.getWidth(), stage.getHeight());
             stage.setScene(scene);
             stage.setTitle("Cafe Simulation — Налаштування");
         } catch (IOException e) {
