@@ -74,6 +74,7 @@ public class ReportController {
     }
 
 
+    // fill fields
     private void fillSummaryStats(String savedFilename) {
         totalArrivedLabel.setText(String.valueOf(stats.getTotalCustomersArrived()));
         totalServedLabel.setText(String.valueOf(stats.getTotalCustomersServed()));
@@ -85,9 +86,10 @@ public class ReportController {
         simDurationLabel.setText(simulationDuration + " тіків");
 
         if (savedFilename != null && !savedFilename.isEmpty()) {
-            reportSavedLabel.setText("✓ Звіт збережено: " + savedFilename);
+            reportSavedLabel.setText(" Звіт збережено: " + savedFilename);
         }
     }
+
 
     private void setupMenuTable() {
         colName.setCellValueFactory(d -> new SimpleStringProperty(d.getValue().name()));
@@ -204,8 +206,6 @@ public class ReportController {
     }
 
 
-
-
     @FXML
     private void onBackToSettings() {
         try {
@@ -213,8 +213,8 @@ public class ReportController {
                     getClass().getResource(
                             "/com/sorokaandriy/cafesimulation/settings-view.fxml")
             );
-            Scene scene = new Scene(loader.load());
             Stage stage = (Stage) menuTable.getScene().getWindow();
+            Scene scene = new Scene(loader.load(), stage.getWidth(), stage.getHeight());
             stage.setScene(scene);
             stage.setTitle("Cafe Simulation — Налаштування");
         } catch (IOException e) {

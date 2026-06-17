@@ -238,6 +238,7 @@
     -fx-border-color: #2e2e2e;
     -fx-border-radius: 4;
     -fx-background-radius: 4;
+    -fx-fixed-cell-size: 20px;
 }
 
 .log-list .list-cell {

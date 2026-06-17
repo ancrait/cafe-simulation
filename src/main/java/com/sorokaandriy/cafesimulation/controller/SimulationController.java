@@ -14,6 +14,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
@@ -37,7 +38,7 @@ public class SimulationController {
     @FXML private GridPane tablesGrid;
     @FXML private ListView<String> queueListView;
     @FXML private ListView<String> ordersListView;
-    @FXML private ListView<String> logListView;
+    @FXML private TextArea logTextArea;
     @FXML private VBox staffContainer;
 
     private SimulationCore core;
@@ -84,21 +85,22 @@ public class SimulationController {
         avgWaitLabel.setText(String.format("%.1f", core.getStatisticsCollector().getAverageWaitTime()));
 
 
-        queueListView.getItems().clear();
+        List<String> queueItems = new ArrayList<>();
         for (Customer c : core.getCustomerQueue()) {
             long waiting = tick - c.getArrivalTime();
             long patience = c.getPatience();
-            queueListView.getItems().add(c.getName() + " — чекає: " + waiting + "/" + patience + " тіків");
+            queueItems.add(c.getName() + " — чекає: " + waiting + "/" + patience + " тіків");
         }
+        queueListView.getItems().setAll(queueItems);
         queueCountLabel.setText(String.valueOf(core.getCustomerQueue().size()));
 
 
-        ordersListView.getItems().clear();
+        List<String> orderItems = new ArrayList<>();
         for (var entry : core.getActiveKitchenOrders().entrySet()) {
             Order order = entry.getValue();
             Staff chef = entry.getKey();
             long timeLeft = chef.getBusyUntil() - tick;
-            ordersListView.getItems().add(
+            orderItems.add(
                     order.getMenuItem().getDisplayName()
                             + " → " + order.getCustomer().getName()
                             + " [" + chef.getName() + ", ще ~" + Math.max(0, timeLeft) + " тіків]"
@@ -106,11 +108,12 @@ public class SimulationController {
         }
 
         for (Order order : core.getPendingOrders()) {
-            ordersListView.getItems().add(
+            orderItems.add(
                     "⏳ " + order.getMenuItem().getDisplayName()
                             + " → " + order.getCustomer().getName() + " [в черзі]"
             );
         }
+        ordersListView.getItems().setAll(orderItems);
         ordersCountLabel.setText(String.valueOf(
                 core.getActiveKitchenOrders().size() + core.getPendingOrders().size()
         ));
@@ -123,13 +126,13 @@ public class SimulationController {
 
 
         List<SimulationEventLog.Event> newEvents = core.getEventLog().getEventsSince(logIndex);
-        for (SimulationEventLog.Event event : newEvents) {
-            logListView.getItems().add(event.toString());
-        }
-        logIndex = core.getEventLog().size();
-
-        if (!logListView.getItems().isEmpty()) {
-            logListView.scrollTo(logListView.getItems().size() - 1);
+        if (!newEvents.isEmpty()) {
+            StringBuilder sb = new StringBuilder();
+            for (SimulationEventLog.Event event : newEvents) {
+                sb.append(event.toString()).append("\n");
+            }
+            logTextArea.appendText(sb.toString());
+            logIndex = core.getEventLog().size();
         }
     }
 
@@ -251,7 +254,7 @@ public class SimulationController {
 
     @FXML
     private void onClearLog() {
-        logListView.getItems().clear();
+        logTextArea.clear();
     }
 
     private void onSimulationFinished() {
@@ -262,7 +265,7 @@ public class SimulationController {
         savedReportFilename = ReportGenerator.saveReportToJsonFile(
                 core.getStatisticsCollector(), core.getCurrentTime()
         );
-        logListView.getItems().add("[СИСТЕМА] Звіт збережено: " + savedReportFilename);
+        logTextArea.appendText("[СИСТЕМА] Звіт збережено: " + savedReportFilename + "\n");
 
 
         openReportScreen();
@@ -274,10 +277,13 @@ public class SimulationController {
                     getClass().getResource(
                             "/com/sorokaandriy/cafesimulation/report-view.fxml")
             );
-            Scene scene = new Scene(loader.load());
+            Stage stage = (Stage) logTextArea.getScene().getWindow();
+            Scene scene = new Scene(loader.load(), stage.getWidth(), stage.getHeight());
 
-
-            List<String> allLogLines = new ArrayList<>(logListView.getItems());
+            List<String> allLogLines = new ArrayList<>();
+            for (String line : logTextArea.getText().split("\n")) {
+                if (!line.isEmpty()) allLogLines.add(line);
+            }
 
             ReportController reportController = loader.getController();
             reportController.initReport(
@@ -288,11 +294,10 @@ public class SimulationController {
                     savedReportFilename
             );
 
-            Stage stage = (Stage) logListView.getScene().getWindow();
             stage.setScene(scene);
             stage.setTitle("Cafe Simulation — Звіт");
         } catch (IOException e) {
-            logListView.getItems().add("[СИСТЕМА] Помилка відкриття екрану звіту: " + e.getMessage());
+            logTextArea.appendText("[СИСТЕМА] Помилка відкриття екрану звіту: " + e.getMessage() + "\n");
             e.printStackTrace();
         }
     }

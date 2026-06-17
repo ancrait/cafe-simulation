@@ -54,9 +54,9 @@ public class CookOrderStrategy implements TaskAssignmentStrategy{
     }
 
     private Order findSuitableOrder(Staff worker, SimulationCore core) {
-        if (!(worker instanceof Chef)) {
-            return core.getPendingOrders().peek();
-        }
+//        if (!(worker instanceof Chef)) {
+//            return core.getPendingOrders().peek();
+//        }
 
         Chef chef = (Chef) worker;
 

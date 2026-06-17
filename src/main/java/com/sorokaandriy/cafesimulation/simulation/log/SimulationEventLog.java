@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+// class for log event
 public class SimulationEventLog {
     public static class Event {
         public final long tick;

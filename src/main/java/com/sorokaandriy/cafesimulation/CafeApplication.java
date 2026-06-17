@@ -12,13 +12,16 @@ import java.util.logging.LogManager;
 public class CafeApplication extends Application {
     @Override
     public void start(Stage stage) throws IOException {
+        java.util.logging.Logger.getLogger("javafx.scene.control.skin.VirtualFlow")
+                .setLevel(java.util.logging.Level.WARNING);
+
         FXMLLoader fxmlLoader = new FXMLLoader(
                 CafeApplication.class.getResource("settings-view.fxml")
         );
-        Scene scene = new Scene(fxmlLoader.load());
-        stage.setTitle("Cafe Simulation — Налаштування");
-        stage.setWidth(960);
-        stage.setHeight(700);
+        Scene scene = new Scene(fxmlLoader.load(), 960, 700);
+        stage.setTitle("Cafe Simulation — Налаштування");   
+        stage.setMinWidth(960);
+        stage.setMinHeight(640);
         stage.setScene(scene);
         stage.show();
     }

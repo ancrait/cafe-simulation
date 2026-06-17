@@ -13,7 +13,7 @@
 
     <HBox styleClass="header" alignment="CENTER_LEFT" spacing="20">
         <padding><Insets top="12" right="24" bottom="12" left="24"/></padding>
-        <Label text="☕ CAFÉ SIMULATION" styleClass="header-title"/>
+        <Label text=" CAFE SIMULATION" styleClass="header-title"/>
         <Region HBox.hgrow="ALWAYS"/>
         <Label fx:id="tickLabel" text="Тік: 0" styleClass="tick-label"/>
         <Button fx:id="pauseButton" text="⏸ Пауза"
@@ -72,7 +72,8 @@
                     <Button text="Очистити" styleClass="btn-clear"
                             onAction="#onClearLog"/>
                 </HBox>
-                <ListView fx:id="logListView" styleClass="log-list" VBox.vgrow="ALWAYS"/>
+                <TextArea fx:id="logTextArea" styleClass="log-area" VBox.vgrow="ALWAYS"
+                          editable="false" wrapText="true"/>
             </VBox>
 
         </VBox>
@@ -99,7 +100,7 @@
             <Label fx:id="avgWaitLabel" text="0.00" styleClass="stat-value"/>
         </VBox>
         <Region HBox.hgrow="ALWAYS"/>
-        <Label fx:id="statusLabel" text="● Симуляція йде..." styleClass="status-running"/>
+        <Label fx:id="statusLabel" text="Симуляція йде..." styleClass="status-running"/>
     </HBox>
 
 </VBox>

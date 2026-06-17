@@ -44,6 +44,7 @@ public class SettingsController {
     public void initialize() {
 
         addWaiterRow("Офіціант-1");
+        addWaiterRow("Офіціант-2");
         addChefRow("Шеф-1", null);
         addChefRow("Шеф-2", MenuItemType.DRINK);
     }
@@ -91,6 +92,7 @@ public class SettingsController {
         }
     }
 
+    // parse from config into fxml elements
     private void applyConfig(SimulationConfig config) {
         tablesCountSpinner.getValueFactory().setValue(config.getTableCount());
         durationSpinner.getValueFactory().setValue(config.getSimulationDuration());
@@ -128,7 +130,7 @@ public class SettingsController {
         HBox row = new HBox(12);
         row.getStyleClass().add("staff-row");
 
-        Label badge = new Label("👤 ОФІЦІАНТ");
+        Label badge = new Label(" ОФІЦІАНТ");
         badge.getStyleClass().add("staff-badge");
 
         TextField nameField = new TextField(defaultName);
@@ -159,7 +161,7 @@ public class SettingsController {
         HBox row = new HBox(12);
         row.getStyleClass().add("staff-row");
 
-        Label badge = new Label("👨‍🍳 ШЕФ");
+        Label badge = new Label(" ШЕФ");
         badge.getStyleClass().add("staff-badge");
 
         TextField nameField = new TextField(defaultName);
@@ -236,15 +238,15 @@ public class SettingsController {
 
 
         try {
-            // створюється завантажувач для view симуляції
+            // new loader for next view simulation
             FXMLLoader loader = new FXMLLoader(
                     getClass().getResource("/com/sorokaandriy/cafesimulation/simulation-view.fxml")
             );
-            Scene scene = new Scene(loader.load()); // створюється нова сцена
-            SimulationController controller = loader.getController(); // новий контролер
-            controller.initSimulation(config); // в контролер передається конфіг (як dto) для даних для подальш симуляції
+            Stage stage = (Stage) tablesCountSpinner.getScene().getWindow();
+            Scene scene = new Scene(loader.load(), stage.getWidth(), stage.getHeight());
+            SimulationController controller = loader.getController();
+            controller.initSimulation(config);
 
-            Stage stage = (Stage) tablesCountSpinner.getScene().getWindow(); // створюється нова сцена
             stage.setScene(scene);
             stage.setTitle("Cafe Simulation — Running");
         } catch (IOException e) {
@@ -253,6 +255,7 @@ public class SettingsController {
         }
     }
 
+    // collects current value from all spinners and the staff list
     private SimulationConfig buildConfig() {
         List<Staff> staffList = new ArrayList<>();
 

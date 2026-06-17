@@ -15,7 +15,7 @@ import java.util.List;
 
 public class ConfigService {
 
-
+    // create json for save config
     public static void saveConfig(SimulationConfig config, String filePath) {
         StringBuilder sb = new StringBuilder();
         sb.append("{\n");

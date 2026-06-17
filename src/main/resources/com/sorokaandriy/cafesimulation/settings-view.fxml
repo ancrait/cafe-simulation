@@ -46,7 +46,7 @@
                     <VBox styleClass="field-group" spacing="6">
                         <Label text="Затримка між тіками (мс)" styleClass="field-label"/>
                         <Spinner fx:id="tickDelaySpinner"
-                                 min="0" max="1000" initialValue="100"
+                                 min="1" max="1000" initialValue="100"
                                  editable="true"
                                  styleClass="spinner"
                                  prefWidth="180"/>
@@ -143,7 +143,7 @@
                     <VBox styleClass="field-group" spacing="6">
                         <Label text="Відхилення (stdDev)" styleClass="field-label"/>
                         <Spinner fx:id="serviceStdDevSpinner"
-                                 min="0" max="10" initialValue="2"
+                                 min="1" max="10" initialValue="2"
                                  editable="true"
                                  styleClass="spinner"
                                  prefWidth="160"/>
@@ -167,7 +167,7 @@
     </ScrollPane>
 
 
-    <!-- FOOTER -->
+
     <HBox styleClass="footer" alignment="CENTER_RIGHT" spacing="12">
         <padding><Insets top="16" right="40" bottom="16" left="40"/></padding>
 

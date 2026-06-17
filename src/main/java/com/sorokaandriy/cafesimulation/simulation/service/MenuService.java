@@ -11,6 +11,8 @@ import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
 
+
+// class for work with menu
 public class MenuService {
 
 

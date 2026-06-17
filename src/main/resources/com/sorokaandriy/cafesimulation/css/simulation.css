@@ -140,16 +140,16 @@
 }
 
 /* ===== LISTS ===== */
-.queue-list, .orders-list, .log-list {
+.queue-list, .orders-list {
     -fx-background-color: #0f0f0f;
     -fx-border-color: #2e2e2e;
     -fx-border-radius: 4;
     -fx-background-radius: 4;
+    -fx-fixed-cell-size: 22px;
 }
 
 .queue-list .list-cell,
-.orders-list .list-cell,
-.log-list .list-cell {
+.orders-list .list-cell {
     -fx-background-color: transparent;
     -fx-text-fill: #cccccc;
     -fx-font-size: 12px;
@@ -157,14 +157,36 @@
 }
 
 .queue-list .list-cell:odd,
-.orders-list .list-cell:odd,
-.log-list .list-cell:odd {
+.orders-list .list-cell:odd {
     -fx-background-color: #141414;
 }
 
-.log-list .list-cell {
+/* ===== LOG TEXT AREA ===== */
+.log-area {
+    -fx-background-color: #0f0f0f;
+    -fx-border-color: #2e2e2e;
+    -fx-border-radius: 4;
+    -fx-background-radius: 4;
+    -fx-text-fill: #cccccc;
     -fx-font-family: "Consolas", monospace;
     -fx-font-size: 11px;
+}
+
+.log-area .content {
+    -fx-background-color: #0f0f0f;
+}
+
+.log-area .scroll-pane {
+    -fx-background-color: #0f0f0f;
+}
+
+.log-area .scroll-bar {
+    -fx-background-color: #1a1a1a;
+}
+
+.log-area .scroll-bar .thumb {
+    -fx-background-color: #3a3a3a;
+    -fx-background-radius: 2;
 }
 
 /* ===== STAFF ===== */
@@ -194,8 +216,13 @@
 }
 
 .fatigue-bar {
-    -fx-pref-height: 4px;
-    -fx-background-radius: 2;
+    -fx-pref-height: 8px;
+    -fx-background-radius: 4;
+    -fx-control-inner-background: #2e2e2e;
+}
+
+.fatigue-bar .bar {
+    -fx-background-radius: 4;
 }
 
 /* ===== FOOTER ===== */
