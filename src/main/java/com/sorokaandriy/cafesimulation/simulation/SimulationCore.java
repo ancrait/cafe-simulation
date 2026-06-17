@@ -81,6 +81,7 @@ public class SimulationCore {
         staffList.add(staff);
     }
 
+    // simulate time program
     public void tick() {
         currentTime++;
         if (currentTime >= nextCustomerArrivalTime) {
@@ -106,6 +107,7 @@ public class SimulationCore {
     }
 
 
+    // call pattern strategy
     private void assignTasks() {
         for (Staff worker : staffList) {
             handleStaffFreeing(worker);
@@ -163,6 +165,7 @@ public class SimulationCore {
     }
 
 
+    // finish eating
     private void handleCustomersEating() {
         for (Table table : tableService.getTables()) {
             if (table.getTableStatus() == TableStatus.OCCUPIED

@@ -216,8 +216,13 @@
 }
 
 .fatigue-bar {
-    -fx-pref-height: 4px;
-    -fx-background-radius: 2;
+    -fx-pref-height: 8px;
+    -fx-background-radius: 4;
+    -fx-control-inner-background: #2e2e2e;
+}
+
+.fatigue-bar .bar {
+    -fx-background-radius: 4;
 }
 
 /* ===== FOOTER ===== */

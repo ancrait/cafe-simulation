@@ -74,6 +74,7 @@ public class ReportController {
     }
 
 
+    // fill fields
     private void fillSummaryStats(String savedFilename) {
         totalArrivedLabel.setText(String.valueOf(stats.getTotalCustomersArrived()));
         totalServedLabel.setText(String.valueOf(stats.getTotalCustomersServed()));
@@ -85,9 +86,10 @@ public class ReportController {
         simDurationLabel.setText(simulationDuration + " тіків");
 
         if (savedFilename != null && !savedFilename.isEmpty()) {
-            reportSavedLabel.setText("✓ Звіт збережено: " + savedFilename);
+            reportSavedLabel.setText(" Звіт збережено: " + savedFilename);
         }
     }
+
 
     private void setupMenuTable() {
         colName.setCellValueFactory(d -> new SimpleStringProperty(d.getValue().name()));
@@ -202,8 +204,6 @@ public class ReportController {
     private void onClearFilter() {
         filterTextField.clear();
     }
-
-
 
 
     @FXML
